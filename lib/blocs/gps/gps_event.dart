@@ -11,8 +11,8 @@ class GpsAndPermissionEvent extends GpsEvent{
   final bool isGpsEnable;
   final bool isGpsPermissionGranted;
 
-  const GpsAndPermissionEvent(
-    this.isGpsEnable,
-    this.isGpsPermissionGranted
-  );
+  const GpsAndPermissionEvent({
+    required this.isGpsEnable,
+    required this.isGpsPermissionGranted
+  });
 }

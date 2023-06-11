@@ -7,7 +7,6 @@ import 'package:sig_app/blocs/blocs.dart';
 class GpsAccessScreen extends StatelessWidget {
   const GpsAccessScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +38,8 @@ class _AccessButton extends StatelessWidget {
         const Text('Es necesario el acceso a gps'),
         MaterialButton(
           onPressed: (){
-
+            final gpsBloc = BlocProvider.of<GpsBloc>(context);
+            gpsBloc.askGpsAccess();
           },
           color: Colors.black,
           shape: const StadiumBorder(),
