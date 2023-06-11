@@ -25,6 +25,7 @@ class SigApp extends StatelessWidget {
       title: 'Sig App',
       debugShowCheckedModeBanner: false,
       home: LoadingScreen(),
+      // home: MyScreen(),
     
     );
   }

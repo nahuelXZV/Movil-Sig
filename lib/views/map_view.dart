@@ -9,7 +9,7 @@ class MapView extends StatelessWidget {
 
   const MapView({
     super.key,
-    required this.initialLocation
+    required this.initialLocation, 
   });
 
   @override
@@ -26,9 +26,11 @@ class MapView extends StatelessWidget {
       child: GoogleMap(
         initialCameraPosition: initialCameraPosition,
         compassEnabled: false,
-        // mapType: MapType.satellite,
+        mapType: MapType.satellite,
         myLocationEnabled: true,
         zoomControlsEnabled: false,
+        myLocationButtonEnabled: false,
+        
         onMapCreated: (controller) => mapBLoc.add(OnMapInitializedEvent(controller)),
         //TODO: Markers
         //TODO: Polilines
