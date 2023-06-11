@@ -66,6 +66,8 @@ class _MyScreenState extends State<MyScreen> {
     'Pera',
     'Sandía',
     'Melón',
+     'Postgrado',
+    'Postgrado 2'
   ];
 
   List<String> filteredList = [];
@@ -81,74 +83,52 @@ class _MyScreenState extends State<MyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     const CameraPosition initialCameraPosition = CameraPosition(
       target: LatLng(-17.0000000, -63.0900),
       zoom: 15
     );
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            flex: 1, // Utiliza 1/6 del espacio disponible
-            child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: searchController,
-                          onChanged: (value) {
-                            setState(() {
-                              filteredList = itemList
-                                  .where((item) =>
-                                      item.toLowerCase().contains(value.toLowerCase()))
-                                  .toList();
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Buscar',
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: filteredList.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(filteredList[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 16.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Acción del botón
-                    },
-                    child: Text('Buscar'),
-                  ),
-                ],
+      body: Center(
+        child: Container(
+    // padding: EdgeInsets.all(16.0),
+    // width: size.width * 0.8,
+    // height: size.width * 0.8 ,
+    alignment: Alignment.center,
+    color: Colors.amber,
+          child: Column(
+            children: [
+              TextField(
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    filteredList = itemList
+                        .where((item) =>
+                            item.toLowerCase().contains(value.toLowerCase().trim()))
+                        .toList();
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Buscar',
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 5, // Utiliza 5/6 del espacio disponible
-            child: Container(
-              // Aquí puedes agregar tu mapa utilizando cualquier widget de mapa, como el de Google Maps
-              child: const GoogleMap(
-                initialCameraPosition: initialCameraPosition,
-                compassEnabled: false,
-                // mapType: MapType.satellite,
-                myLocationEnabled: true,
-                zoomControlsEnabled: false,
+
+              Container(
+                height: 200,
+                color: Colors.pink.shade200,
+                width: size.width * 0.8,
+                child: ListView.builder(
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(filteredList[index]),
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

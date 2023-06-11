@@ -44,7 +44,7 @@ class _MapScreenState extends State<MapScreen> {
 
     locationBloc.stopFollowingUser();
     super.dispose();
-    print('disposw');
+    print('dispose');
   }
 
   @override
@@ -58,16 +58,17 @@ class _MapScreenState extends State<MapScreen> {
           return SingleChildScrollView(
             child: Stack(
               children: [
+
                 Column(
                   children: [
                     SizedBox(
-                      height: size.height*0.269,
+                      height: size.height*0.259,
                       width: size.width,
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: SizedBox(
-                        height: size.height*0.73,
+                        height: size.height*0.74,
                         width: size.width,
                         child: MapView(initialLocation: state.lastKnowLocation!, )
                         // child: MapView(initialLocation: positionUagrm, )
@@ -75,45 +76,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                   ]
                 ),
-
-                Column(
-                  children: [
-                SizedBox(
-                  height: 50.0,
-                  child: Row(
-                    children: const [
-                      Expanded(
-                        child: Icon(
-                          Icons.abc_sharp,
-                          size: 50.0,
-                        ),
-                      ),
-                      Expanded(
-                        child: Icon(
-                          Icons.pedal_bike,
-                          size: 50.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Align(alignment: Alignment.center, child: LabelMyLocation(),),
-                Divider(),
-                const Align(alignment: Alignment.center, child: SearchBar(),),
-                  ]
-                ),
-
-
-
-
-
-
-
-
-
-
-
+                const MenuTopView(),    
 
               ],
             ),
