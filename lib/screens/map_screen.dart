@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/blocs/blocs.dart';
+import 'package:sig_app/views/views.dart';
+import 'package:sig_app/widgets/widgets.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -38,15 +39,23 @@ class _MapScreenState extends State<MapScreen> {
       body: BlocBuilder<LocationBloc, LocationState>(
         builder: (context, state) {
           if( state.lastKnowLocation == null ) return const Center(child: Text('espere por favor'));
-            final CameraPosition initialCameraPosition = CameraPosition(
-              target: state.lastKnowLocation!,
-              zoom: 15
-            );
-          return GoogleMap(
-            initialCameraPosition: initialCameraPosition,
+          return SingleChildScrollView(
+            child: Stack(
+              children: [
+                MapView(initialLocation: state.lastKnowLocation!,), //esta mas al fondo
+                //TODO: botones y mas 
+              ],
+            ),
           );
         },
-      )
-   );
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          BtnCurrentLocation(),
+        ]
+      ),
+    );
   }
 }
