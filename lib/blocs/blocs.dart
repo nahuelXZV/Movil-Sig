@@ -1,2 +1,3 @@
 export 'package:sig_app/blocs/gps/gps_bloc.dart';
+export 'package:sig_app/blocs/location/location_bloc.dart';
 
