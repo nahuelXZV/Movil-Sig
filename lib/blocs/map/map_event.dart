@@ -18,3 +18,8 @@ class InitMarkersEvent extends MapEvent {
   const InitMarkersEvent(this.markers);
 }
 
+class SetMarkerEvent extends MapEvent {
+  final Edificio edificio;
+  const SetMarkerEvent(this.edificio);
+}
+

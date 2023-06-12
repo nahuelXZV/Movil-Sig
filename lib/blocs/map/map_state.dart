@@ -5,10 +5,15 @@ class MapState extends Equatable {
   final bool followUser; //creo que no se ocupa
   final Map<String, Marker> markers;
 
+  final bool isMarkerSearched;
+  final Marker? markerSearched;
+
   const MapState({
     this.isMapInitialized = false,
     this.followUser = false,
     Map<String, Marker>? markers,
+    this.isMarkerSearched = false,
+    this.markerSearched,
   })
   : markers = markers ?? const{};
 
@@ -16,10 +21,14 @@ class MapState extends Equatable {
     bool? isMapInitialized,
     bool? followUser, //creo que no se ocupa
     Map<String, Marker>? markers,
+    bool? isMarkerSearched,
+    Marker? markerSearched,
   }) => MapState(
     isMapInitialized: isMapInitialized ?? this.isMapInitialized,
     followUser: followUser ?? this.followUser, //creo que no se ocupa
     markers: markers ?? this.markers,
+    isMarkerSearched: isMarkerSearched ?? this.isMarkerSearched,
+    markerSearched: markerSearched ?? this.markerSearched,
   );
 
   
@@ -28,6 +37,7 @@ class MapState extends Equatable {
     isMapInitialized,
     followUser,
     markers,
+    isMarkerSearched,
   ];
 }
 

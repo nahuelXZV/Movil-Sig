@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sig_app/helpers/custom_image_marker.dart';
+import 'package:sig_app/models/edificio.dart';
 import 'package:sig_app/services/api_edificios_service.dart';
 
 import '../location/location_bloc.dart';
@@ -23,6 +24,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<OnMapInitializedEvent>( _onInitMap );
 
     on<InitMarkersEvent>((event, emit) => emit( state.copyWith(markers: event.markers) ));
+
+    on<SetMarkerEvent>( _setMarker );
   }
 
   void _onInitMap( OnMapInitializedEvent event, Emitter<MapState> emit) {
@@ -57,5 +60,27 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
     }
     add(InitMarkersEvent(markers));
+  }
+
+
+
+  Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
+    final markers = state.markers;
+
+    final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
+    
+    Marker marcador = Marker(
+      markerId: const MarkerId('search'),
+      position: position,
+      // icon: startMarker,
+      infoWindow: InfoWindow(
+        title: event.edificio.sigla,
+        snippet: event.edificio.descripcion),
+    );
+    markers['search'] = marcador;   
+
+    print('Set MArkers -------------------------------------------------------------------');
+    emit(state.copyWith(markers: markers, markerSearched: marcador, isMarkerSearched: true));
+    moveCamera(position);
   }
 }

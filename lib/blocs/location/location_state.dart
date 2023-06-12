@@ -4,7 +4,7 @@ class LocationState extends Equatable {
 
   final bool followingUser;
   final LatLng? lastKnowLocation;
-  final List<LatLng> myLocationHistory;
+  // final List<LatLng> myLocationHistory;
 
   final String? locationPlace;
 
@@ -12,9 +12,15 @@ class LocationState extends Equatable {
   const LocationState({
     this.followingUser = false,
     this.lastKnowLocation,
-    myLocationHistory, 
+    // myLocationHistory, 
     this.locationPlace,
-  }): myLocationHistory = myLocationHistory ?? const [];
+  });
+  // const LocationState({
+  //   this.followingUser = false,
+  //   this.lastKnowLocation,
+  //   myLocationHistory, 
+  //   this.locationPlace,
+  // }): myLocationHistory = myLocationHistory ?? const [];
 
   LocationState copyWith ({
     final bool? followingUser,
@@ -24,10 +30,11 @@ class LocationState extends Equatable {
   }) => LocationState(
     followingUser: followingUser ?? this.followingUser,
     lastKnowLocation: lastKnowLocation ?? this.lastKnowLocation,
-    myLocationHistory: myLocationHistory ?? this.myLocationHistory,  
+    // myLocationHistory: myLocationHistory ?? this.myLocationHistory,  
     locationPlace: locationPlace ?? this.locationPlace, 
   );
   
   @override
-  List<Object?> get props => [followingUser, lastKnowLocation, myLocationHistory, locationPlace];
+  List<Object?> get props => [followingUser, lastKnowLocation, locationPlace];
+  // List<Object?> get props => [followingUser, lastKnowLocation, myLocationHistory, locationPlace];
 }

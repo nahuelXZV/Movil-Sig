@@ -16,10 +16,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
 
-  
   List<Edificio> edificiosList = []; 
-  // List<String> itemList = [];
-  // List<String> filteredList = [];
   List<Edificio> filteredList = [];
 
   TextEditingController searchController = TextEditingController();
@@ -36,7 +33,6 @@ class _SearchBarState extends State<SearchBar> {
     }
     setState((){
       edificiosList = losEdificios;
-      // itemList = descEdif;
     });
   }
 
@@ -46,12 +42,12 @@ class _SearchBarState extends State<SearchBar> {
     _getEdificio();
     super.initState();
     filteredList = edificiosList;
-    // filteredList = itemList;
   }
 
   @override
   Widget build(BuildContext context) {
     final locationBloc = BlocProvider.of<LocationBloc>(context);
+    final mapBLoc = BlocProvider.of<MapBloc>(context);
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * 0.9,
@@ -141,6 +137,7 @@ class _SearchBarState extends State<SearchBar> {
                   title: Text(filteredList[index].descripcion!),
                   onTap: () {
                     print(filteredList[index].descripcion);
+                    mapBLoc.add(SetMarkerEvent(filteredList[index]));
                     locationBloc.setPlacePosition();
                     setState(() {
                       isSearchOpen = false;
