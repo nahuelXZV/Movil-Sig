@@ -35,6 +35,8 @@ class _MapScreenState extends State<MapScreen> {
     mapBloc =  BlocProvider.of<MapBloc>(context);
     mapBloc.initSetMarkers();
     print('*****************initSetMarkers ********************');
+
+    locationBloc.setPlacePosition();
   }
 
 
