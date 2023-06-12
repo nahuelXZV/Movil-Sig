@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 class PlacesInterceptor extends Interceptor {
   
-  final accessToken = 'pk.eyJ1Ijoia2xlcml0aCIsImEiOiJja3gzdGVoNmMxdjBpMnVxM251ejcwdXhpIn0.KvaIQqpWzyGy2Nt3C4QUgg';
+  final accessToken = 'pk.eyJ1IjoiaGVpZHlvbG1vcyIsImEiOiJjbGlzemJ1M2UxYWp3M2Vud2R0YnJpend2In0.YWTndP8jdVSQtUyf0mgqeQ';
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -11,7 +11,6 @@ class PlacesInterceptor extends Interceptor {
     options.queryParameters.addAll({
       'access_token': accessToken,
       'language': 'es',
-      'limit' : 7
     });
 
 

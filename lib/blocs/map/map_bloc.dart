@@ -35,7 +35,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _mapController?.animateCamera(cameraUpdate);
   }
 
-  Future<void> initSetMarkers () async {
+  Future<void> initSetMarkers() async {
     final Map<String, Marker> markers = {};
     final losEdificios = await _apiEdificiosService.getEdificios();
 

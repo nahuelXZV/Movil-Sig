@@ -1,70 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:sig_app/blocs/blocs.dart';
-// import 'package:sig_app/delegates/delegates.dart';
-
-// class SearchBar extends StatelessWidget {
-//   const SearchBar({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final locationBloc = BlocProvider.of<LocationBloc>(context);
-//     final size = MediaQuery.of(context).size;
-
-//     return Container(
-//       width: size.width * 0.9,
-//       child: Column(
-//         children: [
-//           Container(
-//             height: 50.0,
-//             child: Row(
-//               children: [ 
-//                 Icon(
-//                   Icons.location_on,
-//                   color: Colors.orange.shade700,
-//                   size: 30,
-//                 ),
-//                 Container(
-//                   width: size.width * 0.78,
-//                   height: 50,
-//                   padding: const EdgeInsets.symmetric(horizontal: 10),
-//                   alignment: Alignment.centerLeft,
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.circular(10),
-//                     border: Border.all(
-//                       color: Colors.blueGrey.shade400,
-//                       width: 1.0,
-//                     ),
-//                   ),
-//                   child: GestureDetector(
-//                     onTap: () {
-//                       showSearch(context: context, delegate: SearchDestinationDelegate());
-//                     },
-//                     child: Container(
-//                       child: Text(
-//                         '¿Dónde quieres ir?',
-//                         style: TextStyle(
-//                           color: Colors.blueGrey.shade200,
-//                           fontSize: 16
-//                         )
-//                       )
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
+
+import '../blocs/blocs.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
@@ -75,6 +15,9 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
+
+  // late LocationBloc locationBloc;
+  
   List<String> itemList = [];
   List<String> filteredList = [];
 
@@ -106,6 +49,7 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final locationBloc = BlocProvider.of<LocationBloc>(context);
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * 0.9,
@@ -195,6 +139,7 @@ class _SearchBarState extends State<SearchBar> {
                   title: Text(filteredList[index]),
                   onTap: () {
                     print(filteredList[index]);
+                    locationBloc.setPlacePosition();
                     setState(() {
                       isSearchOpen = false;
                       searchController.text = '';
@@ -210,3 +155,71 @@ class _SearchBarState extends State<SearchBar> {
     );
   }
 }
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:sig_app/blocs/blocs.dart';
+// import 'package:sig_app/delegates/delegates.dart';
+
+// class SearchBar extends StatelessWidget {
+//   const SearchBar({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final locationBloc = BlocProvider.of<LocationBloc>(context);
+//     final size = MediaQuery.of(context).size;
+
+//     return Container(
+//       width: size.width * 0.9,
+//       child: Column(
+//         children: [
+//           Container(
+//             height: 50.0,
+//             child: Row(
+//               children: [ 
+//                 Icon(
+//                   Icons.location_on,
+//                   color: Colors.orange.shade700,
+//                   size: 30,
+//                 ),
+//                 Container(
+//                   width: size.width * 0.78,
+//                   height: 50,
+//                   padding: const EdgeInsets.symmetric(horizontal: 10),
+//                   alignment: Alignment.centerLeft,
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     borderRadius: BorderRadius.circular(10),
+//                     border: Border.all(
+//                       color: Colors.blueGrey.shade400,
+//                       width: 1.0,
+//                     ),
+//                   ),
+//                   child: GestureDetector(
+//                     onTap: () {
+//                       showSearch(context: context, delegate: SearchDestinationDelegate());
+//                     },
+//                     child: Container(
+//                       child: Text(
+//                         '¿Dónde quieres ir?',
+//                         style: TextStyle(
+//                           color: Colors.blueGrey.shade200,
+//                           fontSize: 16
+//                         )
+//                       )
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+

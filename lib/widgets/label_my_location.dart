@@ -12,9 +12,11 @@ class LabelMyLocation extends StatefulWidget {
 class _LabelMyLocationState extends State<LabelMyLocation> {
   @override
   Widget build(BuildContext context) {
-    final locationBloc = BlocProvider.of<LocationBloc>(context);
+    // final locationBloc = BlocProvider.of<LocationBloc>(context);
     final size = MediaQuery.of(context).size;
-    return SizedBox(
+    return BlocBuilder<LocationBloc, LocationState>(
+      builder: (context, state) {
+        return SizedBox(
       width: size.width * 0.9,
       child: Column(
           children: [
@@ -43,7 +45,7 @@ class _LabelMyLocationState extends State<LabelMyLocation> {
                       readOnly: true,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        hintText: locationBloc.state.lastKnowLocation.toString(),
+                        hintText: state.locationPlace,
                         border: InputBorder.none
                       ),
                     ),
@@ -54,6 +56,8 @@ class _LabelMyLocationState extends State<LabelMyLocation> {
             ),
           ]
       ),
+    );
+      },
     );
   }
 }
