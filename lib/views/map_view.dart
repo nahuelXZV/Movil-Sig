@@ -6,10 +6,12 @@ import 'package:sig_app/blocs/blocs.dart';
 class MapView extends StatelessWidget {
 
   final LatLng initialLocation;
+  final Set<Marker> markers;
 
   const MapView({
     super.key,
     required this.initialLocation, 
+    required this.markers,
   });
 
   @override
@@ -21,21 +23,21 @@ class MapView extends StatelessWidget {
     );
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width,
-      height: size.height,
-      child: GoogleMap(
-        initialCameraPosition: initialCameraPosition,
-        compassEnabled: false,
-        mapType: MapType.satellite,
-        myLocationEnabled: true,
-        zoomControlsEnabled: false,
-        myLocationButtonEnabled: false,
-        
-        onMapCreated: (controller) => mapBLoc.add(OnMapInitializedEvent(controller)),
-        //TODO: Markers
-        //TODO: Polilines
-        //TODO: cuando se mueve el mapa
-      ),
+          width: size.width,
+          height: size.height,
+          child: GoogleMap(
+            initialCameraPosition: initialCameraPosition,
+            compassEnabled: false,
+            mapType: MapType.satellite,
+            myLocationEnabled: true,
+            zoomControlsEnabled: false,
+            myLocationButtonEnabled: false,
+            markers: markers,
+            onMapCreated: (controller) => mapBLoc.add(OnMapInitializedEvent(controller)),
+            //TODO: Markers
+            //TODO: Polilines
+            //TODO: cuando se mueve el mapa
+          ),
     );
   }
 }

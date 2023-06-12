@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/blocs/blocs.dart';
+import 'package:sig_app/models/models.dart';
+import 'package:sig_app/services/services.dart';
 import 'package:sig_app/views/views.dart';
 import 'package:sig_app/widgets/widgets.dart';
 
@@ -15,20 +18,12 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late LocationBloc locationBloc;
+  late MapBloc mapBloc;
 
-
-  List<String> itemList = [
-    'Manzana',
-    'Banana',
-    'Naranja',
-    'Pera',
-    'Sandía',
-    'Melón',
-  ];
-
-  List<String> filteredList = [];
-
-  TextEditingController searchController = TextEditingController();
+  List<Edificio>? edificios; 
+  final ApiEdificiosService _apiEdificiosService = ApiEdificiosService();
+  
+  final Map<String, Marker> pruebaMarkers = {}; 
 
   @override
   void initState() {
@@ -36,12 +31,15 @@ class _MapScreenState extends State<MapScreen> {
     locationBloc =  BlocProvider.of<LocationBloc>(context);
     locationBloc.startFollorwingUser();
     print('startfollowinguser');
+
+    mapBloc =  BlocProvider.of<MapBloc>(context);
+    mapBloc.initSetMarkers();
+    print('*****************initSetMarkers ********************');
   }
 
 
   @override
   void dispose() {
-
     locationBloc.stopFollowingUser();
     super.dispose();
     print('dispose');
@@ -49,37 +47,44 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: BlocBuilder<LocationBloc, LocationState>(
-        builder: (context, state) {
-          if( state.lastKnowLocation == null ) return const Center(child: Text('espere por favor'));
-          final size = MediaQuery.of(context).size;
+        builder: (context, locationState) {
+          if( locationState.lastKnowLocation == null ) return const Center(child: Text('espere por favor'));
+          
           // const positionUagrm = LatLng(-17.77579921947698, -63.19528029707799);
-          return SingleChildScrollView(
-            child: Stack(
-              children: [
-
-                Column(
+          return BlocBuilder<MapBloc, MapState>(
+            builder: (context, mapState) {
+              return SingleChildScrollView(
+                child: Stack(
                   children: [
-                    SizedBox(
-                      height: size.height*0.259,
-                      width: size.width,
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: size.height*0.249,
+                          width: size.width,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: size.height*0.74,
+                            width: size.width,
+                            child: MapView(
+                              initialLocation: locationState.lastKnowLocation!, 
+                              markers: mapState.markers.values.toSet(),
+                            )
+                            // child: MapView(initialLocation: positionUagrm, )
+                          ),
+                        ),
+                      ]
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        height: size.height*0.74,
-                        width: size.width,
-                        child: MapView(initialLocation: state.lastKnowLocation!, )
-                        // child: MapView(initialLocation: positionUagrm, )
-                      ),
-                    ),
-                  ]
+                    const MenuTopView(),    
+                  ],
                 ),
-                const MenuTopView(),    
+              );
 
-              ],
-            ),
+            },
           );
         },
       ),

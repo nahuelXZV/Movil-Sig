@@ -25,7 +25,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     });
   }
 
-  Future GetCurrentPosition() async {
+  Future getCurrentPosition() async {
     final position = await Geolocator.getCurrentPosition();
     print('posicion: $position');
     //TODO retornar un ojddeto de tipo LatLng

@@ -41,7 +41,12 @@ dependencies:
   equatable: ^2.0.5
   geolocator: ^9.0.2
   permission_handler: ^10.3.0
+  http: ^0.13.5
+
+  dio: ^4.0.4
+  animate_do: ^2.0.0
   
+  google_polyline_algorithm: ^3.1.0
   google_maps_flutter: ^2.3.0
   adaptive_theme: ^3.2.1
 

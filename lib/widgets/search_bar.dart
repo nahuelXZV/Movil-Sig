@@ -63,8 +63,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sig_app/blocs/blocs.dart';
+import 'package:sig_app/models/models.dart';
+import 'package:sig_app/services/services.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
@@ -75,44 +75,43 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-
-
-  List<String> itemList = [
-    'Manzana',
-    'Banana',
-    'Naranja',
-    'Pera',
-    'Sandía',
-    'Melón',
-    'Postgrado',
-    'Postgrado 2',
-    'Postgrado 3',
-    'Postgrado 4',
-    'Postgrado 5',
-    'Postgrado 6',
-  ];
-
+  List<String> itemList = [];
   List<String> filteredList = [];
 
   TextEditingController searchController = TextEditingController();
   bool isSearchOpen = false;
+
+  List<Edificio>? edificios; 
+  final ApiEdificiosService _apiEdificiosService = ApiEdificiosService();
+
+  Future<void> _getEdificio() async {
+    final losEdificios = await _apiEdificiosService.getEdificios();
+    List<String> descEdif = [];
+    for (var element in losEdificios) {
+      descEdif.add(element.descripcion!);
+    }
+    setState((){
+      edificios = losEdificios;
+      itemList = descEdif;
+    });
+  }
+
   
   @override
   void initState() {
+    _getEdificio();
     super.initState();
     filteredList = itemList;
   }
 
   @override
   Widget build(BuildContext context) {
-    final locationBloc = BlocProvider.of<LocationBloc>(context);
     final size = MediaQuery.of(context).size;
-
-    return Container(
+    return SizedBox(
       width: size.width * 0.9,
       child: Column(
         children: [
-          Container(
+          SizedBox(
             height: 50.0,
             child: Row(
               children: [ 
@@ -151,25 +150,26 @@ class _SearchBarState extends State<SearchBar> {
                       hintText: '¿Dónde quieres ir?',
                       hintStyle: TextStyle(color: Colors.blueGrey.shade200),
                       border: InputBorder.none,
-                      suffixIcon: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            isSearchOpen = false;
-                            searchController.text = '';
-                          });
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.blueGrey.shade600,
-                        ),
-                      ),
+                      suffixIcon: isSearchOpen
+                      ? IconButton(
+                          onPressed: (){
+                            setState(() {
+                              isSearchOpen = false;
+                              searchController.text = '';
+                            });
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.blueGrey.shade600,
+                          ),
+                        )
+                      : null
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
           if(isSearchOpen)
           filteredList.isEmpty
           ? Container(
@@ -193,6 +193,13 @@ class _SearchBarState extends State<SearchBar> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(filteredList[index]),
+                  onTap: () {
+                    print(filteredList[index]);
+                    setState(() {
+                      isSearchOpen = false;
+                      searchController.text = '';
+                    });
+                  },
                 );
               },
             ),
