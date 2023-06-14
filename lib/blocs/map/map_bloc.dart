@@ -39,7 +39,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     _mapController?.animateCamera(cameraUpdate);
   }
 
+  void moveCameraZom( LatLng newLocation, double zoom ) {
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: newLocation,
+          zoom: zoom, // Nivel de zoom deseado
+        ),
+      ),
+    );
+  }
+
   Future<void> initSetMarkers() async {
+
     final Map<String, Marker> markers = {};
     final losEdificios = await _apiEdificiosService.getEdificios();
 
@@ -53,7 +65,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           icon: startMarker,
           infoWindow: InfoWindow(
             title: edificio.sigla,
-            snippet: edificio.descripcion),
+            snippet: edificio.descripcion
+          ),
           
         );
         markers[edificio.id!] = marcador;
@@ -66,21 +79,41 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
     final markers = state.markers;
-
     final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
-    
+    final id = event.edificio.id!;
+
     Marker marcador = Marker(
-      markerId: const MarkerId('search'),
+      markerId: MarkerId(id),
       position: position,
-      // icon: startMarker,
       infoWindow: InfoWindow(
         title: event.edificio.sigla,
-        snippet: event.edificio.descripcion),
+        snippet: event.edificio.descripcion,
+      ),      
     );
     markers['search'] = marcador;   
 
-    print('Set MArkers -------------------------------------------------------------------');
     emit(state.copyWith(markers: markers, markerSearched: marcador, isMarkerSearched: true));
-    moveCamera(position);
+    moveCameraZom(position, 18.5);    
+    _mapController?.showMarkerInfoWindow(markers[id]!.markerId);
+
   }
+  // Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
+  //   final markers = state.markers;
+  //   final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
+
+  //   Marker marcador = Marker(
+  //     markerId: const MarkerId('search'),
+  //     position: position,
+  //     infoWindow: InfoWindow(
+  //       title: event.edificio.sigla,
+  //       snippet: event.edificio.descripcion,
+  //     ),      
+  //   );
+  //   markers['search'] = marcador;   
+
+  //   emit(state.copyWith(markers: markers, markerSearched: marcador, isMarkerSearched: true));
+  //   moveCameraZom(position, 18.5);    
+  //   _mapController?.showMarkerInfoWindow(markers['search']!.markerId);
+
+  // }
 }

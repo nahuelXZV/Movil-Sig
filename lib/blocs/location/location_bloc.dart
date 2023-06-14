@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:sig_app/services/services.dart';
-import 'package:sig_app/models/models.dart';
 
 part 'location_event.dart';
 part 'location_state.dart';

@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
-
-import '../blocs/blocs.dart';
+import 'package:sig_app/blocs/blocs.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
 
-  
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -136,7 +134,7 @@ class _SearchBarState extends State<SearchBar> {
                 return ListTile(
                   title: Text(filteredList[index].descripcion!),
                   onTap: () {
-                    print(filteredList[index].descripcion);
+                    FocusScope.of(context).unfocus();
                     mapBLoc.add(SetMarkerEvent(filteredList[index]));
                     locationBloc.setPlacePosition();
                     setState(() {
