@@ -28,7 +28,8 @@ class BtnCurrentLocation extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(snack);
               return;
             }
-            mapBloc.moveCamera(userLocation);
+            mapBloc.moveCameraZom(userLocation, 15);
+            // mapBloc.moveCamera(userLocation);
           },
         ),
       ),

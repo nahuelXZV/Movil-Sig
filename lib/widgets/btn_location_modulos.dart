@@ -9,8 +9,6 @@ class BtnEdificioLocation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
     return Container(
@@ -21,7 +19,8 @@ class BtnEdificioLocation extends StatelessWidget {
         child: IconButton(
           icon: Icon(Icons.business, color: Colors.indigo.shade900,),
           onPressed: () {
-            mapBloc.moveCamera(locationUagrm);
+            // mapBloc.moveCamera(locationUagrm);
+            mapBloc.moveCameraZom(locationUagrm, 15.9);
           },
         ),
       ),

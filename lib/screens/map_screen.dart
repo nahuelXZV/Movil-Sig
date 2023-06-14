@@ -26,12 +26,11 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     locationBloc =  BlocProvider.of<LocationBloc>(context);
     locationBloc.startFollorwingUser();
-    print('startfollowinguser');
+    // print('startfollowinguser');
 
     mapBloc =  BlocProvider.of<MapBloc>(context);
     mapBloc.initSetMarkers();
-    print('*****************initSetMarkers ********************');
-
+    // print('*****************initSetMarkers ********************');
     locationBloc.setPlacePosition();
   }
 

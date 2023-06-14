@@ -16,25 +16,3 @@ Future<BitmapDescriptor> getAssetImageMarker() async {
 
 }
 
-Future<BitmapDescriptor> getNetworkImageMarker() async {
-
-  final resp = await Dio()
-    .get(
-      'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png',
-      options: Options( responseType: ResponseType.bytes )
-    );
-
-    // return BitmapDescriptor.fromBytes(resp.data);
-
-    // Resize
-    final imageCodec = await ui.instantiateImageCodec( resp.data, targetHeight: 150, targetWidth: 150 );
-    final frame = await imageCodec.getNextFrame();
-    final data = await frame.image.toByteData( format: ui.ImageByteFormat.png );
-
-    if ( data == null ) {
-      return await getAssetImageMarker();
-    }
-
-    return BitmapDescriptor.fromBytes( data.buffer.asUint8List() );
-}
-

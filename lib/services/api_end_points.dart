@@ -8,7 +8,7 @@ const allEdificiosURL = baseURL + ('edificios');
 
 
 // ----UBICACION UAGRM
-const locationUagrm = LatLng(-17.77579921947698, -63.19528029707799);
+const locationUagrm = LatLng(-17.776099073902245, -63.19435971183966);
 
 //---errors
 const serverError = 'Error del servidor';

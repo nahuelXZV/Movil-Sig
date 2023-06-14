@@ -23,3 +23,8 @@ class SetMarkerEvent extends MapEvent {
   const SetMarkerEvent(this.edificio);
 }
 
+class DeleteSearchedMarkerEvent extends MapEvent {
+  // final Edificio edificio;
+  // const DeleteMarkerEvent(this.edificio);
+}
+

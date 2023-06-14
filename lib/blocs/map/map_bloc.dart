@@ -26,6 +26,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<InitMarkersEvent>((event, emit) => emit( state.copyWith(markers: event.markers) ));
 
     on<SetMarkerEvent>( _setMarker );
+
+    on<DeleteSearchedMarkerEvent>( _deleteSearchedMarker );
   }
 
   void _onInitMap( OnMapInitializedEvent event, Emitter<MapState> emit) {
@@ -75,12 +77,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     add(InitMarkersEvent(markers));
   }
 
-
-
   Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
     final markers = state.markers;
     final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
     final id = event.edificio.id!;
+
+    if(state.isMarkerSearched){
+      final markers = state.markers;
+      markers.remove('search');
+      emit(state.copyWith(markers: markers, markerSearched: null, isMarkerSearched: false));
+    }
 
     Marker marcador = Marker(
       markerId: MarkerId(id),
@@ -95,8 +101,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(state.copyWith(markers: markers, markerSearched: marcador, isMarkerSearched: true));
     moveCameraZom(position, 18.5);    
     _mapController?.showMarkerInfoWindow(markers[id]!.markerId);
-
   }
+
+
+  Future<void> _deleteSearchedMarker( DeleteSearchedMarkerEvent event, Emitter<MapState> emit) async {
+    if(state.isMarkerSearched){
+      final markers = state.markers;
+      markers.remove('search');
+      emit(state.copyWith(markers: markers, markerSearched: null, isMarkerSearched: false));
+    }
+  }
+}
+
   // Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
   //   final markers = state.markers;
   //   final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
@@ -116,4 +132,3 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   //   _mapController?.showMarkerInfoWindow(markers['search']!.markerId);
 
   // }
-}

@@ -19,6 +19,7 @@ class _SearchBarState extends State<SearchBar> {
 
   TextEditingController searchController = TextEditingController();
   bool isSearchOpen = false;
+  bool isButtonX = false;
 
   final ApiEdificiosService _apiEdificiosService = ApiEdificiosService();
 
@@ -84,16 +85,19 @@ class _SearchBarState extends State<SearchBar> {
                           edificio.descripcion!.toLowerCase().contains(value.toLowerCase().trim()))
                         .toList();
                         isSearchOpen = true;
+                        isButtonX = true;
                       });
                     },
                     decoration: InputDecoration(
                       hintText: '¿Dónde quieres ir?',
                       hintStyle: TextStyle(color: Colors.blueGrey.shade200),
                       border: InputBorder.none,
-                      suffixIcon: isSearchOpen
+                      suffixIcon: searchController.text.isNotEmpty
                       ? IconButton(
                           onPressed: (){
                             setState(() {
+                              FocusScope.of(context).unfocus();
+                              mapBLoc.add(DeleteSearchedMarkerEvent());
                               isSearchOpen = false;
                               searchController.text = '';
                             });
@@ -139,7 +143,8 @@ class _SearchBarState extends State<SearchBar> {
                     locationBloc.setPlacePosition();
                     setState(() {
                       isSearchOpen = false;
-                      searchController.text = '';
+                      searchController.text = filteredList[index].descripcion!;
+                      // searchController.text = '';
                     });
                   },
                 );
