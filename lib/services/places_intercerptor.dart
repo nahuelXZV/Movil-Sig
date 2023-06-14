@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:sig_app/services/api_end_points.dart';
 
 
 class PlacesInterceptor extends Interceptor {
   
-  final accessToken = 'pk.eyJ1IjoiaGVpZHlvbG1vcyIsImEiOiJjbGlzemJ1M2UxYWp3M2Vud2R0YnJpend2In0.YWTndP8jdVSQtUyf0mgqeQ';
+  final accessToken = mapboxAccessToken;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

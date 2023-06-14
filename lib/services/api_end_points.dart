@@ -17,3 +17,9 @@ const somethingWentWrong = '¡Algo salió mal, intenta de nuevo!';
 
 //---headers
 const Map<String, String> headers = {"Content-Type": "application/json"};
+
+
+
+
+
+const mapboxAccessToken = 'pk.eyJ1IjoiaGVpZHlvbG1vcyIsImEiOiJjbGlzemJ1M2UxYWp3M2Vud2R0YnJpend2In0.YWTndP8jdVSQtUyf0mgqeQ';
