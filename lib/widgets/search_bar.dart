@@ -121,7 +121,7 @@ class _SearchBarState extends State<SearchBar> {
           ? Container(
             height: 30,
             alignment: Alignment.center,
-            color: Colors.pink.shade100,
+            color: Color.fromARGB(255, 237, 213, 247),
             width: size.width * 0.8,
             child: const Text('No hay resultados')
           )
@@ -131,7 +131,7 @@ class _SearchBarState extends State<SearchBar> {
               maxHeight: 250.0, // Altura máxima deseada
             ),
             // height: 200,
-            color: Colors.pink.shade100,
+            color: Color.fromARGB(255, 237, 224, 243),
             width: size.width * 0.8,
             child: ListView.builder(
               itemCount: filteredList.length,

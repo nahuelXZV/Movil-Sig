@@ -10,6 +10,7 @@ import 'package:sig_app/helpers/custom_image_marker.dart';
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:sig_app/widgets/widgets_to_marker.dart';
 
 
 // import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
@@ -184,12 +185,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     //   icon: startMarker,    
     // );
 
+    // final endMaker = await getEndCustomMarkerH(destination.endPlace, "santaCruz");
+
     Marker marcadorEnd = Marker( //*marker: ubicacion del edificio END
       markerId: MarkerId('END'),
       position: destination.points.last,
       infoWindow: InfoWindow(
         title: destination.endPlace,
-      ),    
+      ),
+      // icon: endMaker,    
     );  
 
     final curretPolylines = Map<String, Polyline>.from( state.polylines );

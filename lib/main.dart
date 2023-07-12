@@ -26,7 +26,8 @@ class SigApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sig App',
       debugShowCheckedModeBanner: false,
-      home: LoadingScreen(),
+      home: SplashScreen(),
+      // home: LoadingScreen(),
       // home: MyScreen(),
     
     );
