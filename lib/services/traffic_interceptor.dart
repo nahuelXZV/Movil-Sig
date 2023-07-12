@@ -12,7 +12,8 @@ class TrafficInterceptor extends Interceptor {
     options.queryParameters.addAll({
       'alternatives': true,
       'geometries': 'polyline6',
-      'overview': 'simplified',
+      'overview': 'full',
+      // 'overview': 'simplified',
       'steps': false,
       'access_token': accessToken
     });

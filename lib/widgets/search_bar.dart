@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
@@ -97,7 +98,8 @@ class _SearchBarState extends State<SearchBar> {
                           onPressed: (){
                             setState(() {
                               FocusScope.of(context).unfocus();
-                              mapBLoc.add(DeleteSearchedMarkerEvent());
+                              // mapBLoc.add(DeleteSearchedMarkerEvent());
+                              mapBLoc.cleanBusqueda();
                               isSearchOpen = false;
                               searchController.text = '';
                             });
@@ -137,10 +139,13 @@ class _SearchBarState extends State<SearchBar> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(filteredList[index].descripcion!),
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    mapBLoc.add(SetMarkerEvent(filteredList[index]));
+                  onTap: () async{
+                    final userLocation = locationBloc.state.lastKnowLocation!;
+                    final edificioLocation = LatLng(filteredList[index].latitud!, filteredList[index].longitud!);                    FocusScope.of(context).unfocus();
                     locationBloc.setPlacePosition();
+                    mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));     
+                    final pointsDriving = await mapBLoc.getCoorsStartToEndDriving(userLocation, edificioLocation, filteredList[index].descripcion!);              
+                    mapBLoc.drawRoutePolyline(pointsDriving);
                     setState(() {
                       isSearchOpen = false;
                       searchController.text = filteredList[index].descripcion!;

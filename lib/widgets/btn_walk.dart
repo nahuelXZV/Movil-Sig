@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sig_app/blocs/blocs.dart';
-import 'package:sig_app/ui/custom_snackbar.dart';
+// import 'package:sig_app/ui/custom_snackbar.dart';
 
 class BtnWalk extends StatelessWidget {
   const BtnWalk({super.key});
@@ -10,27 +10,33 @@ class BtnWalk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final locationBloc = BlocProvider.of<LocationBloc>(context);
+    // final locationBloc = BlocProvider.of<LocationBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
-    return IconButton(
-        splashColor: Colors.amber,
-        splashRadius: 25,
-        icon: Icon(
-          Icons.directions_walk,
-          color: Colors.blueGrey.shade700,
-          size: 32,
-        ),
-        onPressed: () {
-          // final userLocation = locationBloc.state.lastKnowLocation;
-
-          // if (userLocation ==  null ) {
-          //   final snack = CustomSnackBar(message: 'no hay ubicacion',);
-          //   ScaffoldMessenger.of(context).showSnackBar(snack);
-          //   return;
-          // }
-          // mapBloc.moveCamera(userLocation);
-        },
+    return BlocBuilder<MapBloc, MapState>(
+      builder: (context, mapState) {
+      return IconButton(
+          splashColor: Colors.amber,
+          splashRadius: 25,
+          icon: !mapState.isDriving && mapState.isEdificioSearched
+          ? Icon(
+            Icons.directions_walk,
+            color: Colors.purple.shade800,
+            size: 32,
+          )
+          : Icon(
+            Icons.directions_walk,
+            color: Colors.blueGrey.shade700,
+            size: 32,
+          ),
+          onPressed: () {
+            if(mapState.isEdificioSearched){
+              mapBloc.add(ChangeIsDrivingEvent(false));
+              mapBloc.drawRoutePolyline(mapBloc.state.routeWalking!);
+            }
+          },
+        );
+      },
     );
   }
 }
