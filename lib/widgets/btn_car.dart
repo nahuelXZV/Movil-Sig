@@ -18,7 +18,7 @@ class BtnCar extends StatelessWidget {
       return IconButton(
           splashColor: Colors.amber,
           splashRadius: 25,
-          icon: mapState.isDriving && mapState.isEdificioSearched
+          icon: mapState.isDriving //&& mapState.isEdificioSearched
           ? Icon(
             Icons.directions_car_filled_outlined,
             color: Colors.purple.shade800,
@@ -33,7 +33,9 @@ class BtnCar extends StatelessWidget {
             if(mapState.isEdificioSearched){
               mapBloc.add(ChangeIsDrivingEvent(true));
               mapBloc.drawRoutePolyline(mapBloc.state.routeDriving!);
-            } 
+            }else{
+              mapBloc.add(ChangeIsDrivingEvent(true));
+            }
           },
       );
       }

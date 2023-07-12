@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:sig_app/helpers/custom_image_marker.dart';
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
+import 'package:http/http.dart' as http;
 
 
 // import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
@@ -53,6 +57,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   void moveCamera( LatLng newLocation ) {
     final cameraUpdate = CameraUpdate.newLatLng( newLocation );
     _mapController?.animateCamera(cameraUpdate);
+  }
+
+  void moveCameraBounds( LatLngBounds bounds ) {
+    double padding = 55;
+    _mapController?.animateCamera(
+    CameraUpdate.newLatLngBounds(
+        bounds,
+        padding,
+      ),
+    );
   }
 
   void moveCameraZom( LatLng newLocation, double zoom ) {
@@ -137,21 +151,22 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     await cleanMap();
     final myRoute;
 
-    print(state.isDriving);
     if(state.isDriving){
       myRoute = Polyline(
         polylineId: const PolylineId('route'),
         color: Color.fromARGB(255, 82, 6, 97),
-        width: 9,
-        points: destination.points,
+        width: 8,
+        points: destination.pointsGoogle,
+        // points: destination.points,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
       );
+      
     }else{
       myRoute = Polyline(
         polylineId: const PolylineId('route'),
         color: Color.fromARGB(255, 82, 6, 97),
-        width: 9,
+        width: 8,
         points: destination.points,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
@@ -162,19 +177,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     }
 
-    double kms = destination.distance / 1000;
-    kms = (kms * 100).floorToDouble();
-    kms /= 100;
-
-    int tripDuration = (destination.duration / 60).floorToDouble().toInt();
-
-    final startMarker = await getAssetImageMarker();
-
-    Marker marcadorStart = Marker( //*marker: ubicacion del user START
-      markerId: MarkerId('START'),
-      position: destination.points.first, 
-      icon: startMarker,    
-    );
+    // final startMarker = await getAssetImageMarker();
+    // Marker marcadorStart = Marker( //*marker: ubicacion del user START
+    //   markerId: MarkerId('START'),
+    //   position: destination.points.first, 
+    //   icon: startMarker,    
+    // );
 
     Marker marcadorEnd = Marker( //*marker: ubicacion del edificio END
       markerId: MarkerId('END'),
@@ -188,54 +196,103 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     curretPolylines['route'] = myRoute;
 
     final currentMarkers = Map<String, Marker>.from( state.markers );
-    currentMarkers['START'] = marcadorStart;   
+    // currentMarkers['START'] = marcadorStart;   
     currentMarkers['END'] = marcadorEnd;
 
 
     add( DisplayPolylinesEvent( curretPolylines, currentMarkers ) );
     await Future.delayed( const Duration( milliseconds: 300 ));
     _mapController?.showMarkerInfoWindow(const MarkerId('END'));
+
+    LatLngBounds bounds = calculateLatLngBounds(destination.points);
+    moveCameraBounds(bounds);
+
   }
 
 
+  static Future<dynamic> receiveRequest(String url) async {
+    http.Response httpResponse = await http.get(Uri.parse(url));
+    try {
+      if (httpResponse.statusCode == 200) {
+        String responseData = httpResponse.body;
+
+        var decodeResponseData = jsonDecode(responseData);
+        return decodeResponseData;
+      } else {
+        return 'ERROR AN OCCURRED, FAILED TO RESPONSE.';
+      }
+    } catch (exp) {
+      return 'ERROR AN OCCURRED, FAILED TO RESPONSE.';
+    }
+  }
+
+  Future<List<LatLng>> getPointsGoogle(LatLng start, LatLng end , bool driving) async{
+
+    String urlOriginToDestinationDirectionDetails;
+    (driving)
+    ? urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${apiKeyGoogleMap}'
+    : urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=walking&key=${apiKeyGoogleMap}';
+      // urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=walking&key=${apiKeyGoogleMap}';
+    var responseDirectionApi = await receiveRequest(urlOriginToDestinationDirectionDetails);
+    final points = responseDirectionApi['routes'][0]['overview_polyline']['points'];
+    List<LatLng> pLineCoordinatesList = [];
+    PolylinePoints pPoints = PolylinePoints();
+    List<PointLatLng> decodedPolylinePointsResultList = pPoints.decodePolyline(points);
+    pLineCoordinatesList.clear();
+    if (decodedPolylinePointsResultList.isNotEmpty) {
+      decodedPolylinePointsResultList.forEach((PointLatLng pointLatLng) {
+        pLineCoordinatesList
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+    return pLineCoordinatesList;
+  }
+
   Future<RouteDestination> getCoorsStartToEndDriving( LatLng start, LatLng end , String endPlace) async {
 
-    final trafficResponse = await trafficService.getCoorsStartToEndDriving(start, end);
+    final pointsGoogle = await getPointsGoogle(start, end, true);
 
+    final trafficResponse = await trafficService.getCoorsStartToEndDriving(start, end);
     final geometry = trafficResponse.routes[0].geometry;
     final distance = trafficResponse.routes[0].distance;
     final duration = trafficResponse.routes[0].duration;
 
     // Decodificar
     final points = decodePolyline( geometry, accuracyExponent: 6 );
-
     final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
 
+    final durationString = convertTime(duration);
+    final distanceString = convertDistance(distance);
     return RouteDestination(
       points: latLngList, 
-      duration: duration, 
-      distance: distance,
+      pointsGoogle: pointsGoogle,
+      duration: durationString, 
+      distance: distanceString,
       endPlace: endPlace,
     );
   }
 
 
   Future<RouteDestination> getCoorsStartToEndWalking( LatLng start, LatLng end, String endPlace ) async {
-    final trafficResponse = await trafficService.getCoorsStartToEndWalking(start, end);
+    
+    final pointsGoogle = await getPointsGoogle(start, end, false);
 
+    final trafficResponse = await trafficService.getCoorsStartToEndWalking(start, end);
     final geometry = trafficResponse.routes[0].geometry;
     final distance = trafficResponse.routes[0].distance;
     final duration = trafficResponse.routes[0].duration;
 
     // Decodificar
     final points = decodePolyline( geometry, accuracyExponent: 6 );
-
     final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
 
+    final durationString = convertTime(duration);
+    final distanceString = convertDistance(distance);
     return RouteDestination(
       points: latLngList, 
-      duration: duration, 
-      distance: distance,
+      pointsGoogle: pointsGoogle,
+      duration: durationString, 
+      distance: distanceString,
       endPlace: endPlace,
     );
   }
@@ -265,5 +322,53 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     add(ChangeIsEdificioSearchedEvent(false));
     add(DisplayPolylinesEvent(currentPolylines, currentMarkers));
   }
+
+  // String convertirDistancia(double distancia){
+  //   int tripDuration = (destination.duration / 60).floorToDouble().toInt();
+  //   return "aa";
+  // }
+
+  String convertDistance(double distance) {
+    if (distance >= 1000) {
+      double kilometers = distance / 1000;
+      return kilometers.toStringAsFixed(2) + " km";
+    }
+      return distance.toStringAsFixed(0) + " m";
+  }
+
+  String convertTime(double seconds) {
+    int minutes = (seconds / 60).floor();
+    int remainingSeconds = (seconds % 60).floor();
+
+    if (minutes >= 60) {
+      int hours = (minutes / 60).floor();
+      int remainingMinutes = (minutes % 60).floor();
+      return "$hours h $remainingMinutes min";
+    }
+    return "$minutes min";
+  }
+
+
+  LatLngBounds calculateLatLngBounds(List<LatLng> routePoints) {
+    double minLat = double.infinity;
+    double maxLat = -double.infinity;
+    double minLng = double.infinity;
+    double maxLng = -double.infinity;
+
+    for (LatLng point in routePoints) {
+      if (point.latitude < minLat) minLat = point.latitude;
+      if (point.latitude > maxLat) maxLat = point.latitude;
+      if (point.longitude < minLng) minLng = point.longitude;
+      if (point.longitude > maxLng) maxLng = point.longitude;
+    }
+
+    LatLng southwest = LatLng(minLat, minLng);
+    LatLng northeast = LatLng(maxLat, maxLng);
+
+    return LatLngBounds(southwest: southwest, northeast: northeast);
+  }
+
+
+
 }
 

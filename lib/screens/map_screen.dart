@@ -77,6 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                       ]
                     ),  
                     const MenuTopView(), 
+                    if(mapState.isEdificioSearched) BoxInformation()
                   ],
                 ),
               );
@@ -90,9 +91,9 @@ class _MapScreenState extends State<MapScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: const [
-          BtnEdificioLocation(),
+          // BtnEdificioLocation(),
           BtnCurrentLocation(),
-          BoxInformation(),
+          // BoxInformation(),
         ]
       ),
     );

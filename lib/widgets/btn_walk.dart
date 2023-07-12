@@ -18,7 +18,7 @@ class BtnWalk extends StatelessWidget {
       return IconButton(
           splashColor: Colors.amber,
           splashRadius: 25,
-          icon: !mapState.isDriving && mapState.isEdificioSearched
+          icon: !mapState.isDriving //&& mapState.isEdificioSearched
           ? Icon(
             Icons.directions_walk,
             color: Colors.purple.shade800,
@@ -33,6 +33,8 @@ class BtnWalk extends StatelessWidget {
             if(mapState.isEdificioSearched){
               mapBloc.add(ChangeIsDrivingEvent(false));
               mapBloc.drawRoutePolyline(mapBloc.state.routeWalking!);
+            }else{
+              mapBloc.add(ChangeIsDrivingEvent(false));
             }
           },
         );

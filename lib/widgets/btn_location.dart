@@ -17,12 +17,13 @@ class BtnCurrentLocation extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: CircleAvatar(
         maxRadius: 23,
-        backgroundColor: Colors.blueGrey.shade50,
+        backgroundColor: Colors.purple.shade800,
         child: IconButton(
-          icon: Icon(Icons.my_location_outlined, color: Colors.indigo.shade900,),
+          icon: Icon(Icons.my_location_outlined, color: Color.fromARGB(255, 248, 244, 250),),
           onPressed: () {
             final userLocation = locationBloc.state.lastKnowLocation;
 
+            
             if (userLocation ==  null ) {
               final snack = CustomSnackBar(message: 'no hay ubicacion',);
               ScaffoldMessenger.of(context).showSnackBar(snack);

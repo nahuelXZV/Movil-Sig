@@ -7,12 +7,14 @@ import 'package:sig_app/models/places_models.dart';
 class RouteDestination {
 
   final List<LatLng> points;
-  final double duration;
-  final double distance;
+  final List<LatLng> pointsGoogle;
+  final String duration;
+  final String distance;
   final String endPlace;
 
   RouteDestination({
     required this.points, 
+    required this.pointsGoogle, 
     required this.duration, 
     required this.distance,
     required this.endPlace,

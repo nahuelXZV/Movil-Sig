@@ -90,7 +90,7 @@ class _SearchBarState extends State<SearchBar> {
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: '¿Dónde quieres ir?',
+                      hintText: '¿A que lugar de la UAGRM quieres ir?',
                       hintStyle: TextStyle(color: Colors.blueGrey.shade200),
                       border: InputBorder.none,
                       suffixIcon: searchController.text.isNotEmpty
@@ -143,9 +143,12 @@ class _SearchBarState extends State<SearchBar> {
                     final userLocation = locationBloc.state.lastKnowLocation!;
                     final edificioLocation = LatLng(filteredList[index].latitud!, filteredList[index].longitud!);                    FocusScope.of(context).unfocus();
                     locationBloc.setPlacePosition();
-                    mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));     
-                    final pointsDriving = await mapBLoc.getCoorsStartToEndDriving(userLocation, edificioLocation, filteredList[index].descripcion!);              
-                    mapBLoc.drawRoutePolyline(pointsDriving);
+                    mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));
+                    final points;
+                    mapBLoc.state.isDriving
+                    ? points = await mapBLoc.getCoorsStartToEndDriving(userLocation, edificioLocation, filteredList[index].descripcion!)
+                    : points = await mapBLoc.getCoorsStartToEndWalking(userLocation, edificioLocation, filteredList[index].descripcion!);
+                    mapBLoc.drawRoutePolyline(points);
                     setState(() {
                       isSearchOpen = false;
                       searchController.text = filteredList[index].descripcion!;
