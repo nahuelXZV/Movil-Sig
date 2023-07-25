@@ -10,7 +10,6 @@ import 'package:sig_app/helpers/custom_image_marker.dart';
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:sig_app/widgets/widgets_to_marker.dart';
 
 
 // import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
@@ -27,6 +26,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationBloc locationBloc;
   TrafficService trafficService;
   GoogleMapController? _mapController;
+  LatLng? mapCenter;
+
 
   MapBloc({
     required this.locationBloc,

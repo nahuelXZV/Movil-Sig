@@ -77,6 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                       ]
                     ),  
                     const MenuTopView(), 
+                    const ManualMarker(),
                     if(mapState.isEdificioSearched) BoxInformation()
                   ],
                 ),

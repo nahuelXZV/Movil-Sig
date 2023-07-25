@@ -38,20 +38,3 @@ Future<BitmapDescriptor> getEndCustomMarker( int kilometers, String destination 
 
 }
 
-Future<BitmapDescriptor> getEndCustomMarkerH( String destination, String localidad ) async {
-
-  final recoder = ui.PictureRecorder();
-  final canvas = ui.Canvas( recoder );
-  const size = ui.Size(500, 200);
-
-  final startMarker = EndMarkerPainterH(descripcion: destination, localidad: localidad);
-  startMarker.paint(canvas, size);
-
-  final picture = recoder.endRecording();
-  final image = await picture.toImage(size.width.toInt(), size.height.toInt());
-  final byteData = await image.toByteData( format: ui.ImageByteFormat.png );
-
-  return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
-
-}
-
