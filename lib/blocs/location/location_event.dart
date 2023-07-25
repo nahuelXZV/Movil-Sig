@@ -16,7 +16,3 @@ class OnStartFollowingUser extends LocationEvent{}
 
 class OnStopFollowingUser extends LocationEvent {}
 
-class OnLocationPlace extends LocationEvent{
-  final String locationPlace;
-  const OnLocationPlace(this.locationPlace);
-}

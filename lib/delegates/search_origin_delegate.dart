@@ -1,14 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/models/models.dart';
 
-class SearchDestinationDelegate extends SearchDelegate<Edificio?> {
+class SearchOriginDelegate extends SearchDelegate<SearchResult> {
 
-  SearchDestinationDelegate():super(
-    searchFieldLabel: 'Buscar edificio...',
+  SearchOriginDelegate():super(
+    searchFieldLabel: 'Buscar origen...',
    
   );
 
@@ -30,7 +27,8 @@ class SearchDestinationDelegate extends SearchDelegate<Edificio?> {
     return IconButton(
       icon: const Icon( Icons.arrow_back ),
       onPressed: () {
-        close(context, null );
+        final result = SearchResult( cancel: true );
+        close(context, result );
       }, 
     );
   }
@@ -43,23 +41,14 @@ class SearchDestinationDelegate extends SearchDelegate<Edificio?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-
-    final edificios = BlocProvider.of<SearchBloc>(context).state.edificios;
-
-
-    return ListView(
-      children: [
-        ...edificios.map((edificio) => ListTile(
-              title: Text( edificio.descripcion! ),
-              subtitle: Text( edificio.sigla! ),
-              leading: const Icon( Icons.history, color: Colors.black ),
-              onTap: () {
-                
-                close(context, edificio );
-              }
-            ))
-
-        ],
+    return ListTile(
+      leading: const Icon( Icons.location_on_outlined, color: Colors.black ),
+      title: const Text('Colocar la ubicación manualmente', style: TextStyle( color: Colors.black )),
+      onTap: () {
+      
+        final result = SearchResult( cancel: false, manual: true );
+        close(context, result );
+      }
     );
 
   }

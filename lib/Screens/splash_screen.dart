@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/screens/loading_screen.dart';
 import 'dart:async';
 
@@ -12,7 +14,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(Duration(seconds: 3), () {
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
+    searchBloc.cargarEdificios();
+
+    Timer(Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoadingScreen()),

@@ -2,16 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/delegates/delegates.dart';
+import 'package:sig_app/models/models.dart';
 
-class LabelMyLocation extends StatelessWidget {
-  const LabelMyLocation({super.key});
+class SearchOrigen extends StatelessWidget {
+  const SearchOrigen({super.key});
+
+
+   void onSearchResults( BuildContext context, SearchResult result ) async {
+    
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
+    final locationBloc = BlocProvider.of<LocationBloc>(context);
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+
+    if ( result.manual == true ) {
+      searchBloc.add( OnActivateManualMarkerEvent() );
+      return;
+    }
+
+    if ( result.position != null ) {
+      final destination = await searchBloc.getCoorsStartToEnd( locationBloc.state.lastKnowLocation!, result.position! );
+      await mapBloc.drawRoutePolyline(destination);
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final locationBloc = BlocProvider.of<LocationBloc>(context);
     final size = MediaQuery.of(context).size;
-    return BlocBuilder<LocationBloc, LocationState>(
-      builder: (context, state) {
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (context, searchState) {
         return Container(
           width: size.width * 0.9,
           height: 50.0,
@@ -23,8 +42,13 @@ class LabelMyLocation extends StatelessWidget {
                 size: 30,
               ),
               GestureDetector(
-                onTap: (){
-                  showSearch(context: context, delegate: SearchDestinationDelegate());
+                onTap: () async {
+                  showSearch(context: context, delegate: SearchOriginDelegate());
+
+                  final result = await showSearch(context: context, delegate: SearchOriginDelegate());
+                  if( result == null ) return;
+
+                  onSearchResults( context, result );
                 },
                 child: Container(
                   width: size.width * 0.78,
@@ -39,10 +63,10 @@ class LabelMyLocation extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-                  child:  state.locationPlace == null 
+                  child:  searchState.origen == null 
                   ? CircularProgressIndicator()
                   :Text(
-                    '${state.locationPlace}',
+                    '${searchState.origen!.name}',
                     style: TextStyle(color: Colors.blueGrey.shade200),
                   ),
                 ),

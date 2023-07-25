@@ -21,3 +21,25 @@ class AddToHistoryEvent extends SearchEvent {
   const AddToHistoryEvent(this.place);
 }
 
+class InitAllEdificiosEvent extends SearchEvent {
+  final List<Edificio> edificios;
+  const InitAllEdificiosEvent(this.edificios);
+}
+
+
+class SetOrigenEvent extends SearchEvent {
+  final PointOrigen origen;
+  SetOrigenEvent(this.origen);
+}
+
+class SetDestinoEvent extends SearchEvent {
+  final Edificio? destino;
+  SetDestinoEvent(this.destino);
+}
+
+
+class SetRoutesEvent extends SearchEvent {
+  final RouteDestination routeDriving;
+  final RouteDestination routeWalking;
+  SetRoutesEvent(this.routeDriving, this.routeWalking);
+}

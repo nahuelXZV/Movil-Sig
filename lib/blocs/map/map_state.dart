@@ -3,8 +3,7 @@ part of 'map_bloc.dart';
 class MapState extends Equatable {
   final bool isMapInitialized;
   final bool followUser; //creo que no se ocupa
-  // final bool isMarkerSearched;
-  // final Marker? markerSearched;
+
   final bool isEdificioSearched;
   final Edificio? edificioSearched;
 
@@ -18,8 +17,6 @@ class MapState extends Equatable {
   const MapState({
     this.isMapInitialized = false,
     this.followUser = false,
-    // this.isMarkerSearched = false,
-    // this.markerSearched,
     this.isEdificioSearched = false,
     this.edificioSearched,
     this.routeDriving,
@@ -34,8 +31,6 @@ class MapState extends Equatable {
   MapState copyWith({
     bool? isMapInitialized,
     bool? followUser, //creo que no se ocupa
-    // bool? isMarkerSearched,
-    // Marker? markerSearched,
     bool? isEdificioSearched,
     Edificio? edificioSearched,
     RouteDestination? routeDriving,
@@ -46,8 +41,6 @@ class MapState extends Equatable {
   }) => MapState(
     isMapInitialized: isMapInitialized ?? this.isMapInitialized,
     followUser: followUser ?? this.followUser, //creo que no se ocupa
-    // isMarkerSearched: isMarkerSearched ?? this.isMarkerSearched,
-    // markerSearched: markerSearched ?? this.markerSearched,
     isEdificioSearched: isEdificioSearched ?? this.isEdificioSearched,
     edificioSearched: edificioSearched ?? this.edificioSearched,
     routeDriving: routeDriving ?? this.routeDriving,
@@ -62,8 +55,6 @@ class MapState extends Equatable {
   List<Object?> get props => [
     isMapInitialized,
     followUser,
-    // isMarkerSearched,
-    // markerSearched,
     isEdificioSearched,
     edificioSearched,
     routeDriving,

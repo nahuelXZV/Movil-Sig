@@ -31,7 +31,7 @@ class MenuTopView extends StatelessWidget {
             ),
           ),
           const Divider(color: Colors.transparent, height: 10.0,),
-          const Align(alignment: Alignment.center, child: LabelMyLocation(),),
+          const Align(alignment: Alignment.center, child: SearchOrigen(),),
           const Divider(color: Colors.transparent, height: 10.0,),
           const Align(alignment: Alignment.center, child: SearchBar(),),
           const Divider(color: Colors.transparent, height: 10.0,),

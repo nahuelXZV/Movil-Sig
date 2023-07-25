@@ -10,8 +10,8 @@ class BtnCar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // final locationBloc = BlocProvider.of<LocationBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
 
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, mapState) {
@@ -30,12 +30,18 @@ class BtnCar extends StatelessWidget {
             size: 32,
           ),
           onPressed: () {
-            if(mapState.isEdificioSearched){
+            if(searchBloc.state.destino != null){
               mapBloc.add(ChangeIsDrivingEvent(true));
-              mapBloc.drawRoutePolyline(mapBloc.state.routeDriving!);
+              mapBloc.drawRoutePolyline(searchBloc.state.routeDriving!);
             }else{
               mapBloc.add(ChangeIsDrivingEvent(true));
             }
+            // if(mapState.isEdificioSearched){
+            //   mapBloc.add(ChangeIsDrivingEvent(true));
+            //   mapBloc.drawRoutePolyline(mapBloc.state.routeDriving!);
+            // }else{
+            //   mapBloc.add(ChangeIsDrivingEvent(true));
+            // }
           },
       );
       }

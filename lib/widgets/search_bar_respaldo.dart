@@ -150,14 +150,14 @@ class _SearchBarState extends State<SearchBar> {
                     ]),),
 
                   onTap: () async{
-                    final userLocation = locationBloc.state.lastKnowLocation!;
                     final edificioLocation = LatLng(filteredList[index].latitud!, filteredList[index].longitud!);                    FocusScope.of(context).unfocus();
-                    locationBloc.setPlacePosition();
-                    mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));
+                    // await locationBloc.setPlacePosition();s
+                    final userLocation = locationBloc.state.lastKnowLocation!;
+                    // mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));
                     final points;
                     mapBLoc.state.isDriving
-                    ? points = await mapBLoc.getCoorsStartToEndDriving(userLocation, edificioLocation, filteredList[index].descripcion!)
-                    : points = await mapBLoc.getCoorsStartToEndWalking(userLocation, edificioLocation, filteredList[index].descripcion!);
+                    ? points = await mapBLoc.getCoorsStartToEndMAPBOXDriving(userLocation, edificioLocation, filteredList[index].descripcion!)
+                    : points = await mapBLoc.getCoorsStartToEndMAPBOXWalking(userLocation, edificioLocation, filteredList[index].descripcion!);
                     mapBLoc.drawRoutePolyline(points);
                     setState(() {
                       isSearchOpen = false;

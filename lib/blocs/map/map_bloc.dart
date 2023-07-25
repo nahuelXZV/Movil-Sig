@@ -1,27 +1,21 @@
-import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
-import 'package:sig_app/helpers/custom_image_marker.dart';
+import 'package:sig_app/blocs/blocs.dart';
+
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
-import 'package:http/http.dart' as http;
 
-
-// import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
-
-import '../location/location_bloc.dart';
 
 part 'map_event.dart';
 part 'map_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
 
-  final ApiEdificiosService _apiEdificiosService = ApiEdificiosService();
 
   final LocationBloc locationBloc;
   TrafficService trafficService;
@@ -38,16 +32,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     on<InitMarkersEvent>((event, emit) => emit( state.copyWith(markers: event.markers) ));
 
-    // on<SetMarkerEvent>( _setMarker );
-
-    on<SetEdificioSearchedEvent>( _setEdificioSearched );
-
     on<DisplayPolylinesEvent>((event, emit) => emit( state.copyWith( polylines: event.polylines, markers: event.markers ) ));
 
     on<ChangeIsDrivingEvent>((event, emit) => emit( state.copyWith(isDriving: event.isDriving)));
     
-    on<ChangeIsEdificioSearchedEvent>((event, emit) => emit( state.copyWith(isEdificioSearched: event.isEdificioSearched)));
-    // on<DeleteSearchedMarkerEvent>( _deleteSearchedMarker );
+    
   }
 
   void _onInitMap( OnMapInitializedEvent event, Emitter<MapState> emit) {
@@ -82,71 +71,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     );
   }
 
-  Future<void> initSetMarkers() async {
-
-    final Map<String, Marker> markers = {};
-    final losEdificios = await _apiEdificiosService.getEdificios();
-
-    final startMarker = await getAssetImageMarker();
-
-    if(losEdificios.isNotEmpty){
-      for (var edificio in losEdificios) {
-        Marker marcador = Marker(
-          markerId: MarkerId(edificio.id!),
-          position: LatLng(edificio.latitud!, edificio.longitud!),
-          icon: startMarker,
-          infoWindow: InfoWindow(
-            title: edificio.sigla,
-            snippet: edificio.descripcion
-          ),
-          
-        );
-        markers[edificio.id!] = marcador;
-      }
-    }
-    add(InitMarkersEvent(markers));
-  }
-
-  // Future<void> _setMarker( SetMarkerEvent event, Emitter<MapState> emit) async {
-  //   final markers = state.markers;
-  //   final position = LatLng(event.edificio.latitud!, event.edificio.longitud!);
-  //   final id = event.edificio.id!;
-
-  //   if(state.isMarkerSearched){
-  //     final markers = state.markers;
-  //     markers.remove('search');
-  //     emit(state.copyWith(markers: markers, markerSearched: null, isMarkerSearched: false));
-  //   }
-
-  //   Marker marcador = Marker(
-  //     markerId: MarkerId(id),
-  //     position: position,
-  //     infoWindow: InfoWindow(
-  //       title: event.edificio.sigla,
-  //       snippet: event.edificio.descripcion,
-  //     ),      
-  //   );
-  //   markers['search'] = marcador;   
-
-  //   emit(state.copyWith(markers: markers, markerSearched: marcador, isMarkerSearched: true));
-  //   moveCameraZom(position, 18.5);    
-  //   _mapController?.showMarkerInfoWindow(markers[id]!.markerId);
-  // }
-
-  Future<void> _setEdificioSearched( SetEdificioSearchedEvent event, Emitter<MapState> emit) async {
-
-    final edificioLocation = LatLng(event.edificio.latitud!, event.edificio.longitud!);
-  
-    final RouteDestination routeDriving = await getCoorsStartToEndDriving(event.userLocation, edificioLocation, event.edificio.descripcion!);
-    final RouteDestination routeWalking = await getCoorsStartToEndWalking(event.userLocation, edificioLocation, event.edificio.descripcion!);
-
-    emit(state.copyWith(
-      edificioSearched: event.edificio,
-      isEdificioSearched: true,
-      routeDriving: routeDriving,
-      routeWalking: routeWalking,
-    ));
-  }
 
 
   Future drawRoutePolyline( RouteDestination destination ) async {
@@ -158,8 +82,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         polylineId: const PolylineId('route'),
         color: Color.fromARGB(255, 82, 6, 97),
         width: 8,
-        points: destination.pointsGoogle,
-        // points: destination.points,
+        points: destination.points,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
       );
@@ -190,8 +113,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final curretPolylines = Map<String, Polyline>.from( state.polylines );
     curretPolylines['route'] = myRoute;
 
-    final currentMarkers = Map<String, Marker>.from( state.markers );
-    // currentMarkers['START'] = marcadorStart;   
+    final currentMarkers = Map<String, Marker>.from( state.markers ); 
     currentMarkers['END'] = marcadorEnd;
 
 
@@ -205,47 +127,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
 
-  static Future<dynamic> receiveRequest(String url) async {
-    http.Response httpResponse = await http.get(Uri.parse(url));
-    try {
-      if (httpResponse.statusCode == 200) {
-        String responseData = httpResponse.body;
 
-        var decodeResponseData = jsonDecode(responseData);
-        return decodeResponseData;
-      } else {
-        return 'ERROR AN OCCURRED, FAILED TO RESPONSE.';
-      }
-    } catch (exp) {
-      return 'ERROR AN OCCURRED, FAILED TO RESPONSE.';
-    }
-  }
 
-  Future<List<LatLng>> getPointsGoogle(LatLng start, LatLng end , bool driving) async{
-
-    String urlOriginToDestinationDirectionDetails;
-    (driving)
-    ? urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${apiKeyGoogleMap}'
-    : urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=walking&key=${apiKeyGoogleMap}';
-      // urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=walking&key=${apiKeyGoogleMap}';
-    var responseDirectionApi = await receiveRequest(urlOriginToDestinationDirectionDetails);
-    final points = responseDirectionApi['routes'][0]['overview_polyline']['points'];
-    List<LatLng> pLineCoordinatesList = [];
-    PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolylinePointsResultList = pPoints.decodePolyline(points);
-    pLineCoordinatesList.clear();
-    if (decodedPolylinePointsResultList.isNotEmpty) {
-      decodedPolylinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoordinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-      });
-    }
-    return pLineCoordinatesList;
-  }
-
-  Future<RouteDestination> getCoorsStartToEndDriving( LatLng start, LatLng end , String endPlace) async {
-
-    final pointsGoogle = await getPointsGoogle(start, end, true);
+  Future<RouteDestination> getCoorsStartToEndMAPBOXDriving( LatLng start, LatLng end , String endPlace) async {
 
     final trafficResponse = await trafficService.getCoorsStartToEndDriving(start, end);
     final geometry = trafficResponse.routes[0].geometry;
@@ -260,7 +144,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final distanceString = convertDistance(distance);
     return RouteDestination(
       points: latLngList, 
-      pointsGoogle: pointsGoogle,
       duration: durationString, 
       distance: distanceString,
       endPlace: endPlace,
@@ -268,9 +151,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
 
-  Future<RouteDestination> getCoorsStartToEndWalking( LatLng start, LatLng end, String endPlace ) async {
-    
-    final pointsGoogle = await getPointsGoogle(start, end, false);
+  Future<RouteDestination> getCoorsStartToEndMAPBOXWalking( LatLng start, LatLng end, String endPlace ) async {
 
     final trafficResponse = await trafficService.getCoorsStartToEndWalking(start, end);
     final geometry = trafficResponse.routes[0].geometry;
@@ -285,27 +166,18 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final distanceString = convertDistance(distance);
     return RouteDestination(
       points: latLngList, 
-      pointsGoogle: pointsGoogle,
       duration: durationString, 
       distance: distanceString,
       endPlace: endPlace,
     );
   }
 
-  // Future<void> _deleteSearchedMarker( DeleteSearchedMarkerEvent event, Emitter<MapState> emit) async {
-  //   if(state.isMarkerSearched){
-  //     final markers = state.markers;
-  //     markers.remove('search');
-  //     emit(state.copyWith(markers: markers, markerSearched: null, isMarkerSearched: false));
-  //   }
-  // }
 
   Future cleanMap() async {
     final currentMarkers = Map<String, Marker>.from(state.markers);
     final currentPolylines = Map<String, Polyline>.from(state.polylines);
     currentMarkers.clear();
     currentPolylines.clear();
-    // add(ChangeIsEdificioSearchedEvent(false));
     add(DisplayPolylinesEvent(currentPolylines, currentMarkers));
   }
 
@@ -314,14 +186,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final currentPolylines = Map<String, Polyline>.from(state.polylines);
     currentMarkers.clear();
     currentPolylines.clear();
-    add(ChangeIsEdificioSearchedEvent(false));
     add(DisplayPolylinesEvent(currentPolylines, currentMarkers));
   }
-
-  // String convertirDistancia(double distancia){
-  //   int tripDuration = (destination.duration / 60).floorToDouble().toInt();
-  //   return "aa";
-  // }
 
   String convertDistance(double distance) {
     if (distance >= 1000) {

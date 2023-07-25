@@ -10,8 +10,8 @@ class BoxInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // final locationBloc = BlocProvider.of<LocationBloc>(context);
-    // final mapBloc = BlocProvider.of<MapBloc>(context);
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
+
     final size = MediaQuery.of(context).size;
     return BlocBuilder<MapBloc, MapState>(
       
@@ -21,7 +21,7 @@ class BoxInformation extends StatelessWidget {
           left: 10,
           child: Container(
             height: 80,
-            width: size.width * 0.47,
+            width: size.width * 0.5,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -29,20 +29,6 @@ class BoxInformation extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Text(
-                //   mapState.isDriving
-                //   ? "Tiempo: ${mapState.routeDriving!.duration}"
-                //   : "Tiempo: ${mapState.routeWalking!.duration}",
-                //   style: TextStyle(fontSize: 16),
-                // ),
-                // SizedBox(height: 8),
-                // Text(
-                //   mapState.isDriving
-                //   ? "Distancia: ${mapState.routeDriving!.distance}"
-                //   : "Distancia: ${mapState.routeWalking!.distance}",
-                //   style: TextStyle(fontSize: 16),
-                // ),
-
                 RichText(
                   text: TextSpan(
                     children: [
@@ -56,8 +42,8 @@ class BoxInformation extends StatelessWidget {
                       ),
                       TextSpan(
                         text: mapState.isDriving
-                        ? mapState.routeDriving!.duration
-                        : mapState.routeWalking!.duration,
+                        ? searchBloc.state.routeDriving!.duration
+                        : searchBloc.state.routeWalking!.duration,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -80,8 +66,8 @@ class BoxInformation extends StatelessWidget {
                       ),
                       TextSpan(
                         text: mapState.isDriving
-                  ? mapState.routeDriving!.distance
-                  : mapState.routeWalking!.distance,
+                        ? searchBloc.state.routeDriving!.distance
+                        : searchBloc.state.routeWalking!.distance,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
