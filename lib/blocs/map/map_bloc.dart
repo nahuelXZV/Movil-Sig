@@ -178,22 +178,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     }
 
-    // final startMarker = await getAssetImageMarker();
-    // Marker marcadorStart = Marker( //*marker: ubicacion del user START
-    //   markerId: MarkerId('START'),
-    //   position: destination.points.first, 
-    //   icon: startMarker,    
-    // );
-
-    // final endMaker = await getEndCustomMarkerH(destination.endPlace, "santaCruz");
-
     Marker marcadorEnd = Marker( //*marker: ubicacion del edificio END
       markerId: MarkerId('END'),
       position: destination.points.last,
       infoWindow: InfoWindow(
         title: destination.endPlace,
-      ),
-      // icon: endMaker,    
+      ), 
     );  
 
     final curretPolylines = Map<String, Polyline>.from( state.polylines );

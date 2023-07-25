@@ -10,6 +10,7 @@ class Edificio {
     double? longitud;
     String? grupo;
     String? sigla;
+    String? localidad;
 
 
   Edificio(
@@ -24,6 +25,7 @@ class Edificio {
       this.longitud,
       this.grupo,
       this.sigla,
+      this.localidad,
     }
   );
 
@@ -39,6 +41,7 @@ class Edificio {
       longitud: double.parse(json['longitud']),
       grupo: json['grupo'],
       sigla: json['sigla'],
+      localidad: json['localidad'],
     );
   }
 }

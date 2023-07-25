@@ -138,7 +138,17 @@ class _SearchBarState extends State<SearchBar> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(filteredList[index].descripcion!),
+                  // title: Text(filteredList[index].descripcion!),
+                  title: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(filteredList[index].descripcion!),
+                        Text(filteredList[index].localidad!, style: TextStyle(fontSize: 14, color: Colors.black54),)
+                    ]),),
+
                   onTap: () async{
                     final userLocation = locationBloc.state.lastKnowLocation!;
                     final edificioLocation = LatLng(filteredList[index].latitud!, filteredList[index].longitud!);                    FocusScope.of(context).unfocus();

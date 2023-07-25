@@ -42,7 +42,7 @@ Future<BitmapDescriptor> getEndCustomMarkerH( String destination, String localid
 
   final recoder = ui.PictureRecorder();
   final canvas = ui.Canvas( recoder );
-  const size = ui.Size(350, 150);
+  const size = ui.Size(500, 200);
 
   final startMarker = EndMarkerPainterH(descripcion: destination, localidad: localidad);
   startMarker.paint(canvas, size);
