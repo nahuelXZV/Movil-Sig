@@ -29,8 +29,8 @@ class _MapScreenState extends State<MapScreen> {
     // print('startfollowinguser');
 
     mapBloc =  BlocProvider.of<MapBloc>(context);
-    mapBloc.initSetMarkers();
-    // print('*****************initSetMarkers ********************');
+    // mapBloc.initSetMarkers();
+
     locationBloc.setPlacePosition();
   }
 
@@ -67,15 +67,17 @@ class _MapScreenState extends State<MapScreen> {
                             height: size.height*0.74,
                             width: size.width,
                             child: MapView(
-                              initialLocation: locationUagrm, 
-                              // initialLocation: locationState.lastKnowLocation!, 
+                              // initialLocation: locationUagrm, 
+                              initialLocation: locationState.lastKnowLocation!, 
                               markers: mapState.markers.values.toSet(),
+                              polylines: mapState.polylines.values.toSet(),
                             ),
                           ),
                         ),
                       ]
                     ),  
                     const MenuTopView(), 
+                    if(mapState.isEdificioSearched) BoxInformation()
                   ],
                 ),
               );
@@ -87,9 +89,11 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: const [
-          BtnEdificioLocation(),
+          // BtnEdificioLocation(),
           BtnCurrentLocation(),
+          // BoxInformation(),
         ]
       ),
     );

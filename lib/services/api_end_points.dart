@@ -23,3 +23,5 @@ const Map<String, String> headers = {"Content-Type": "application/json"};
 
 
 const mapboxAccessToken = 'pk.eyJ1IjoiaGVpZHlvbG1vcyIsImEiOiJjbGlzemJ1M2UxYWp3M2Vud2R0YnJpend2In0.YWTndP8jdVSQtUyf0mgqeQ';
+
+String apiKeyGoogleMap = 'AIzaSyAB7tN-kAt_hebjeKGs-8InHyQ4v5DWOdo';

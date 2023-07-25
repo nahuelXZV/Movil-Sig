@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
@@ -89,7 +90,7 @@ class _SearchBarState extends State<SearchBar> {
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: '¿Dónde quieres ir?',
+                      hintText: '¿A que lugar de la UAGRM quieres ir?',
                       hintStyle: TextStyle(color: Colors.blueGrey.shade200),
                       border: InputBorder.none,
                       suffixIcon: searchController.text.isNotEmpty
@@ -97,7 +98,8 @@ class _SearchBarState extends State<SearchBar> {
                           onPressed: (){
                             setState(() {
                               FocusScope.of(context).unfocus();
-                              mapBLoc.add(DeleteSearchedMarkerEvent());
+                              // mapBLoc.add(DeleteSearchedMarkerEvent());
+                              mapBLoc.cleanBusqueda();
                               isSearchOpen = false;
                               searchController.text = '';
                             });
@@ -119,7 +121,7 @@ class _SearchBarState extends State<SearchBar> {
           ? Container(
             height: 30,
             alignment: Alignment.center,
-            color: Colors.pink.shade100,
+            color: Color.fromARGB(255, 237, 213, 247),
             width: size.width * 0.8,
             child: const Text('No hay resultados')
           )
@@ -129,18 +131,34 @@ class _SearchBarState extends State<SearchBar> {
               maxHeight: 250.0, // Altura máxima deseada
             ),
             // height: 200,
-            color: Colors.pink.shade100,
+            color: Color.fromARGB(255, 237, 224, 243),
             width: size.width * 0.8,
             child: ListView.builder(
               itemCount: filteredList.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(filteredList[index].descripcion!),
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    mapBLoc.add(SetMarkerEvent(filteredList[index]));
+                  // title: Text(filteredList[index].descripcion!),
+                  title: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(filteredList[index].descripcion!),
+                        Text(filteredList[index].localidad!, style: TextStyle(fontSize: 14, color: Colors.black54),)
+                    ]),),
+
+                  onTap: () async{
+                    final userLocation = locationBloc.state.lastKnowLocation!;
+                    final edificioLocation = LatLng(filteredList[index].latitud!, filteredList[index].longitud!);                    FocusScope.of(context).unfocus();
                     locationBloc.setPlacePosition();
+                    mapBLoc.add(SetEdificioSearchedEvent(filteredList[index], userLocation));
+                    final points;
+                    mapBLoc.state.isDriving
+                    ? points = await mapBLoc.getCoorsStartToEndDriving(userLocation, edificioLocation, filteredList[index].descripcion!)
+                    : points = await mapBLoc.getCoorsStartToEndWalking(userLocation, edificioLocation, filteredList[index].descripcion!);
+                    mapBLoc.drawRoutePolyline(points);
                     setState(() {
                       isSearchOpen = false;
                       searchController.text = filteredList[index].descripcion!;

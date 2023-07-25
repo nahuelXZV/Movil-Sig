@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/screens/screen.dart';
+import 'package:sig_app/services/services.dart';
 
 void main() {
   runApp(
@@ -9,7 +10,7 @@ void main() {
       providers: [
         BlocProvider(create: (context) => GpsBloc(),),
         BlocProvider(create: (context) => LocationBloc(),),
-        BlocProvider(create: (context) => MapBloc(locationBloc: BlocProvider.of<LocationBloc>(context) ),),
+        BlocProvider(create: (context) => MapBloc(trafficService: TrafficService(), locationBloc: BlocProvider.of<LocationBloc>(context) ),),
       ],
       child: const SigApp(),
     ),
@@ -25,7 +26,8 @@ class SigApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sig App',
       debugShowCheckedModeBanner: false,
-      home: LoadingScreen(),
+      home: SplashScreen(),
+      // home: LoadingScreen(),
       // home: MyScreen(),
     
     );

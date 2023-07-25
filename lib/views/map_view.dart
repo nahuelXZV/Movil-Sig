@@ -7,11 +7,13 @@ class MapView extends StatelessWidget {
 
   final LatLng initialLocation;
   final Set<Marker> markers;
+  final Set<Polyline> polylines;
 
   const MapView({
     super.key,
     required this.initialLocation, 
     required this.markers,
+    required this.polylines
   });
 
   @override
@@ -28,11 +30,12 @@ class MapView extends StatelessWidget {
           child: GoogleMap(
             initialCameraPosition: initialCameraPosition,
             compassEnabled: false,
-            mapType: MapType.satellite,
+            // mapType: MapType.satellite,
             myLocationEnabled: true,
             zoomControlsEnabled: false,
             myLocationButtonEnabled: false,
             markers: markers,
+            polylines: polylines,
             onMapCreated: (controller) => mapBLoc.add(OnMapInitializedEvent(controller)),
             //TODO: Polilines
             //TODO: cuando se mueve el mapa
