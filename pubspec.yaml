@@ -54,6 +54,10 @@ dependencies:
   google_maps_flutter: ^2.3.0
   adaptive_theme: ^3.2.1
 
+  # speech_to_text: ^6.1.1 #de voz a texto
+
+  speech_to_text: ^6.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

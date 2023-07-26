@@ -8,6 +8,19 @@
 
 <!-- Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+<!-- microfono -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+
+
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
     
 
    <application
@@ -45,4 +58,5 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
 </manifest>

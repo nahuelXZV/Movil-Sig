@@ -22,7 +22,7 @@ class SearchBar extends StatelessWidget {
     final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, edificio.descripcion!);
     final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, edificio.descripcion!);
     
-    searchBloc.add(SetDestinoEvent(edificio)); //! OJO: carga el edificio buscado
+    searchBloc.add(SetDestinoEvent(edificio, true)); //! OJO: carga el edificio buscado
     searchBloc.add(SetRoutesEvent(pointsDriving, pointsWalking)); //aqui carga ya las rutas
 
     mapBLoc.state.isDriving
@@ -70,7 +70,7 @@ class SearchBar extends StatelessWidget {
               ),
               child: BlocBuilder<SearchBloc, SearchState>(
                 builder: (context, searchState) {
-                  return (searchState.destino != null)
+                  return (searchState.isDestinoSearched)
                   ? Text(
                     '${searchState.destino!.descripcion}',
                     style: TextStyle(color: Colors.grey.shade600),

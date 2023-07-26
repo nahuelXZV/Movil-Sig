@@ -22,7 +22,7 @@ class SearchOrigen extends StatelessWidget {
     if ( result.position != null ) {
       final origen = result.position!;
 
-      if(searchBloc.state.destino != null){
+      if(searchBloc.state.isDestinoSearched){
         showLoadingMessage(context);
         final destino = LatLng(searchBloc.state.destino!.latitud!, searchBloc.state.destino!.longitud!);
         final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!);

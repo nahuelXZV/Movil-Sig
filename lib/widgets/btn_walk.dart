@@ -30,7 +30,7 @@ class BtnWalk extends StatelessWidget {
             size: 32,
           ),
           onPressed: () {
-            if(searchBloc.state.destino != null){
+            if(searchBloc.state.isDestinoSearched){
               mapBloc.add(ChangeIsDrivingEvent(false));
               mapBloc.drawRoutePolyline(searchBloc.state.routeWalking!);
             }else{

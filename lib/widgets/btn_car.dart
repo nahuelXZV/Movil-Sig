@@ -30,18 +30,12 @@ class BtnCar extends StatelessWidget {
             size: 32,
           ),
           onPressed: () {
-            if(searchBloc.state.destino != null){
+            if(searchBloc.state.isDestinoSearched){
               mapBloc.add(ChangeIsDrivingEvent(true));
               mapBloc.drawRoutePolyline(searchBloc.state.routeDriving!);
             }else{
               mapBloc.add(ChangeIsDrivingEvent(true));
             }
-            // if(mapState.isEdificioSearched){
-            //   mapBloc.add(ChangeIsDrivingEvent(true));
-            //   mapBloc.drawRoutePolyline(mapBloc.state.routeDriving!);
-            // }else{
-            //   mapBloc.add(ChangeIsDrivingEvent(true));
-            // }
           },
       );
       }

@@ -4,6 +4,8 @@ import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/screens/loading_screen.dart';
 import 'dart:async';
 
+import 'package:sig_app/screens/microfono_prueba.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -20,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
+        // MaterialPageRoute(builder: (context) => Microfono()),
         MaterialPageRoute(builder: (context) => LoadingScreen()),
       );
     });

@@ -18,7 +18,7 @@ class SearchDestinationDelegate extends SearchDelegate<Edificio?> {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.mic),
+        icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -52,7 +52,7 @@ class SearchDestinationDelegate extends SearchDelegate<Edificio?> {
       children: [
         ...edificios.map((edificio) => ListTile(
               title: Text( edificio.descripcion! ),
-              subtitle: Text( edificio.sigla! ),
+              subtitle: Text( edificio.localidad! ),
               leading: const Icon( Icons.history, color: Colors.black ),
               onTap: () {
                 

@@ -10,6 +10,7 @@ class SearchState extends Equatable {
 
   final PointOrigen? origen;
   final Edificio? destino;
+  final bool isDestinoSearched;
 
   final RouteDestination? routeDriving;
   final RouteDestination? routeWalking;
@@ -24,6 +25,7 @@ class SearchState extends Equatable {
 
     this.origen = null,
     this.destino = null,
+    this.isDestinoSearched = false,
 
     this.routeDriving,
     this.routeWalking,
@@ -39,6 +41,7 @@ class SearchState extends Equatable {
 
     PointOrigen? origen,
     Edificio? destino,
+    bool? isDestinoSearched,
 
     RouteDestination? routeDriving,
     RouteDestination? routeWalking,
@@ -52,6 +55,7 @@ class SearchState extends Equatable {
 
     origen: origen ?? this.origen,
     destino: destino ?? this.destino,
+    isDestinoSearched: isDestinoSearched ?? this.isDestinoSearched,
 
     routeDriving: routeDriving ?? this.routeDriving,
     routeWalking: routeWalking ?? this.routeWalking,
@@ -68,6 +72,7 @@ class SearchState extends Equatable {
 
     origen,
     destino,
+    isDestinoSearched,
 
     routeDriving,
     routeWalking,

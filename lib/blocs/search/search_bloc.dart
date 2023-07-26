@@ -38,7 +38,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     on<InitAllEdificiosEvent>((event, emit) => emit(state.copyWith(edificios: event.edificios)));
     on<SetOrigenEvent>( (event, emit) => emit(state.copyWith(origen: event.origen)) );
-    on<SetDestinoEvent>((event, emit) => emit(state.copyWith(destino: event.destino)),);
+    on<SetDestinoEvent>((event, emit) => emit(state.copyWith(destino: event.destino, isDestinoSearched: event.isDestinoSearched)),);
 
     on<SetRoutesEvent>((event, emit) => emit(state.copyWith(routeDriving: event.routeDriving, routeWalking: event.routeWalking)),);
 
@@ -60,9 +60,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     add(InitAllEdificiosEvent(losEdificios));
   }
 
-  //set origen
-  //set destino
-  //set routes
 
   Future<void> currentPositionToOrigen() async {
     final position = await Geolocator.getCurrentPosition();

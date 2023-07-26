@@ -34,7 +34,8 @@ class SetOrigenEvent extends SearchEvent {
 
 class SetDestinoEvent extends SearchEvent {
   final Edificio? destino;
-  SetDestinoEvent(this.destino);
+  final bool? isDestinoSearched;
+  SetDestinoEvent(this.destino, this.isDestinoSearched);
 }
 
 

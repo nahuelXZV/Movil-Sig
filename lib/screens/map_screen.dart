@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:sig_app/blocs/blocs.dart';
-import 'package:sig_app/services/services.dart';
 import 'package:sig_app/views/views.dart';
 import 'package:sig_app/widgets/widgets.dart';
 
@@ -78,12 +77,12 @@ class _MapScreenState extends State<MapScreen> {
 
                     BlocBuilder<SearchBloc, SearchState>(
                       builder: (context, searchState){
-                        return (searchState.destino != null && searchState.routeDriving != null && searchState.routeWalking != null)
+                        return (searchState.isDestinoSearched)
                         ? BoxInformation()
                         : SizedBox();
                       },
                     ),
-                    const MenuTopView(), 
+                    // const MenuTopView(), 
                     const ManualMarker(),
                   ],
                 ),
