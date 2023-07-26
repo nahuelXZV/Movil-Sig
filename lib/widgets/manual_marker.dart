@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/helpers/helpers.dart';
+import 'package:sig_app/models/models.dart';
+import 'package:sig_app/services/services.dart';
 
 class ManualMarker extends StatelessWidget {
   const ManualMarker({Key? key}) : super(key: key);
@@ -34,8 +37,9 @@ class _ManualMarkerBody extends StatelessWidget {
 
     final size = MediaQuery.of(context).size;
     final searchBloc = BlocProvider.of<SearchBloc>(context);
-    final locationBloc = BlocProvider.of<LocationBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
+
+    final trafficService = TrafficService();
 
     return SizedBox(
       width: size.width,
@@ -68,31 +72,33 @@ class _ManualMarkerBody extends StatelessWidget {
               duration: const Duration( milliseconds: 300 ),
               child: MaterialButton(
                 minWidth: size.width -120,
-                child: const Text('Confimar destino', style: TextStyle( color: Colors.white, fontWeight: FontWeight.w300 )),
+                child: const Text('Confimar origen', style: TextStyle( color: Colors.white, fontWeight: FontWeight.w300 )),
                 color: Colors.black,
                 elevation: 0,
                 height: 50,
                 shape: const StadiumBorder(),
                 onPressed: () async {
-                
-                  print('desde confirmar destino');
-                  // Todo: loading
 
-                  final start = locationBloc.state.lastKnowLocation;
-                  if ( start == null ) return;
+                  final origen = mapBloc.mapCenter;
+                  if ( origen == null ) return;
 
-                  final end = mapBloc.mapCenter;
-                  if ( end == null ) return;
+                  final origenString = await trafficService.getInformationPlace(origen);
 
-                  showLoadingMessage(context);
-
-
-                  final destination = await searchBloc.getCoorsStartToEnd(start, end);
-                  await mapBloc.drawRoutePolyline(destination);
+                  if(searchBloc.state.destino != null){
+                    final destino = LatLng(searchBloc.state.destino!.latitud!, searchBloc.state.destino!.longitud!);
+                    showLoadingMessage(context);
+                    final routeDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!);
+                    final routeWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!);
+                    mapBloc.state.isDriving
+                    ? await mapBloc.drawRoutePolyline(routeDriving)
+                    : await mapBloc.drawRoutePolyline(routeWalking);
+                    searchBloc.add(SetRoutesEvent(routeDriving, routeWalking));
+                    Navigator.pop(context);
+                  }
                   
+                  searchBloc.add(SetOrigenEvent(PointOrigen(name: origenString, position: origen)));
                   searchBloc.add( OnDeactivateManualMarkerEvent());
-
-                  Navigator.pop(context);
+                  
                   
                 },
               ),

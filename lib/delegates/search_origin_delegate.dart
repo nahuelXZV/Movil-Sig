@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/models/models.dart';
+import 'package:sig_app/services/services.dart';
 
 class SearchOriginDelegate extends SearchDelegate<SearchResult> {
 
@@ -41,16 +44,39 @@ class SearchOriginDelegate extends SearchDelegate<SearchResult> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ListTile(
-      leading: const Icon( Icons.location_on_outlined, color: Colors.black ),
-      title: const Text('Colocar la ubicación manualmente', style: TextStyle( color: Colors.black )),
-      onTap: () {
-      
-        final result = SearchResult( cancel: false, manual: true );
-        close(context, result );
-      }
-    );
 
+    final currentLocation = BlocProvider.of<LocationBloc>(context).state.lastKnowLocation;
+    final trafficService = TrafficService();
+
+    return ListView(
+      children: [
+        ListTile(
+          leading: const Icon( Icons.location_on_outlined, color: Colors.black ),
+          title: const Text('Colocar la ubicación manualmente', style: TextStyle( color: Colors.black )),
+          onTap: () {
+          
+            final result = SearchResult( cancel: false, manual: true );
+            close(context, result );
+          }
+        ),
+        ListTile(
+          leading: const Icon( Icons.location_history, color: Colors.black ),
+          title: const Text('Usar mi ubicacion actual', style: TextStyle( color: Colors.black )),
+          onTap: () async {
+            final origenString = await trafficService.getInformationPlace(currentLocation!);
+            final result = SearchResult( 
+              cancel: false, 
+              manual: false,
+              position: currentLocation,
+              name: "Ubicacion actual",
+              description: origenString
+            );
+            
+            close(context, result );
+          }
+        ),
+      ]
+    );
   }
 
 

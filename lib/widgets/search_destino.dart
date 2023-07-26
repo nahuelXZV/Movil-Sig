@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:sig_app/delegates/delegates.dart';
+import 'package:sig_app/helpers/helpers.dart';
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/blocs/blocs.dart';
 
@@ -25,8 +26,8 @@ class SearchBar extends StatelessWidget {
     searchBloc.add(SetRoutesEvent(pointsDriving, pointsWalking)); //aqui carga ya las rutas
 
     mapBLoc.state.isDriving
-    ? mapBLoc.drawRoutePolyline(pointsDriving)
-    : mapBLoc.drawRoutePolyline(pointsWalking);
+    ? await mapBLoc.drawRoutePolyline(pointsDriving)
+    : await mapBLoc.drawRoutePolyline(pointsWalking);
 
   }
 
@@ -46,11 +47,13 @@ class SearchBar extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
+
               final result = await showSearch(context: context, delegate: SearchDestinationDelegate());
               if( result == null ) return;
 
-              
+              showLoadingMessage(context);
               await onSearchResults( context, result );
+              Navigator.pop(context);
             },
             child: Container(
               width: size.width * 0.78,
@@ -65,10 +68,6 @@ class SearchBar extends StatelessWidget {
                   width: 1.0,
                 ),
               ),
-              // child: Text(
-              //   '¿A qué lugar de la UAGRM quieres ir?',
-              //   style: TextStyle(color: Colors.blueGrey.shade200),
-              // ),
               child: BlocBuilder<SearchBloc, SearchState>(
                 builder: (context, searchState) {
                   return (searchState.destino != null)

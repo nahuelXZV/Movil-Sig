@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/delegates/delegates.dart';
+import 'package:sig_app/helpers/helpers.dart';
 import 'package:sig_app/models/models.dart';
 
 class SearchOrigen extends StatelessWidget {
   const SearchOrigen({super.key});
 
 
-   void onSearchResults( BuildContext context, SearchResult result ) async {
-    
+  Future<void> onSearchResults( BuildContext context, SearchResult result ) async {
     final searchBloc = BlocProvider.of<SearchBloc>(context);
-    final locationBloc = BlocProvider.of<LocationBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
-
+    
     if ( result.manual == true ) {
       searchBloc.add( OnActivateManualMarkerEvent() );
       return;
     }
 
     if ( result.position != null ) {
-      final destination = await searchBloc.getCoorsStartToEnd( locationBloc.state.lastKnowLocation!, result.position! );
-      await mapBloc.drawRoutePolyline(destination);
-    }
+      final origen = result.position!;
 
+      if(searchBloc.state.destino != null){
+        showLoadingMessage(context);
+        final destino = LatLng(searchBloc.state.destino!.latitud!, searchBloc.state.destino!.longitud!);
+        final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!);
+        final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!);
+        searchBloc.add(SetRoutesEvent(pointsDriving, pointsWalking)); //aqui carga ya las rutas
+        mapBloc.state.isDriving
+        ? await mapBloc.drawRoutePolyline(pointsDriving)
+        : await mapBloc.drawRoutePolyline(pointsWalking);
+        Navigator.pop(context);
+      }
+
+      searchBloc.add(SetOrigenEvent(PointOrigen(name: result.description, position: result.position))); //! OJO: carga el origen buscado
+   }
   }
 
   @override
@@ -43,12 +55,13 @@ class SearchOrigen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  showSearch(context: context, delegate: SearchOriginDelegate());
 
                   final result = await showSearch(context: context, delegate: SearchOriginDelegate());
                   if( result == null ) return;
 
-                  onSearchResults( context, result );
+                  // showLoadingMessage(context);
+                  await onSearchResults( context, result );
+                  // Navigator.pop(context);
                 },
                 child: Container(
                   width: size.width * 0.78,
@@ -67,7 +80,7 @@ class SearchOrigen extends StatelessWidget {
                   ? CircularProgressIndicator()
                   :Text(
                     '${searchState.origen!.name}',
-                    style: TextStyle(color: Colors.blueGrey.shade200),
+                    style: TextStyle(color: Colors.grey.shade600),
                   ),
                 ),
               ),

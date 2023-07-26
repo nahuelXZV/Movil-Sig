@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sig_app/blocs/blocs.dart';
+import 'package:sig_app/helpers/helpers.dart';
 import 'package:sig_app/models/models.dart';
 
 class SearchDestinationDelegate extends SearchDelegate<Edificio?> {

@@ -75,8 +75,6 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       ]
                     ),  
-                    const MenuTopView(), 
-                    const ManualMarker(),
 
                     BlocBuilder<SearchBloc, SearchState>(
                       builder: (context, searchState){
@@ -85,6 +83,8 @@ class _MapScreenState extends State<MapScreen> {
                         : SizedBox();
                       },
                     ),
+                    const MenuTopView(), 
+                    const ManualMarker(),
                   ],
                 ),
               );

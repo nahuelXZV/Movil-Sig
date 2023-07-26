@@ -46,31 +46,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
 
-  Future<RouteDestination> getCoorsStartToEnd( LatLng start, LatLng end ) async {
-
-    final trafficResponse = await trafficService.getCoorsStartToEnd(start, end);
-
-    // Información del destino
-    final endPlace = await trafficService.getInformationPlace(end);
-
-    final geometry = trafficResponse.routes[0].geometry;
-    final distance = trafficResponse.routes[0].distance;
-    final duration = trafficResponse.routes[0].duration;
-
-    // Decodificar
-    final points = decodePolyline( geometry, accuracyExponent: 6 );
-
-    final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
-
-    return RouteDestination(
-      points: latLngList,
-      distance: distance.toString(),
-      duration: duration.toString(),
-      endPlace: "lugar final"
-    );
-
-  }
-
 
   Future getPlacesByQuery( LatLng proximity, String query ) async {
     final newPlaces = await trafficService.getResultsByQuery(proximity, query);
@@ -89,20 +64,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   //set destino
   //set routes
 
-  // Future<void> _setEdificioSearched( SetEdificioSearchedEvent event, Emitter<MapState> emit) async {
-
-  //   final edificioLocation = LatLng(event.edificio.latitud!, event.edificio.longitud!);
-  
-  //   final RouteDestination routeDriving = await getCoorsStartToEndGoogleDriving(event.userLocation, edificioLocation, event.edificio.descripcion!);
-  //   final RouteDestination routeWalking = await getCoorsStartToEndGoogleWalking(event.userLocation, edificioLocation, event.edificio.descripcion!);
-
-  //   emit(state.copyWith(
-  //     destino: event.edificio,
-  //     routeDriving: routeDriving,
-  //     routeWalking: routeWalking,
-  //   ));
-  // }
-
   Future<void> currentPositionToOrigen() async {
     final position = await Geolocator.getCurrentPosition();
     final posLatLng = LatLng( position.latitude, position.longitude );
@@ -110,7 +71,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     final origen = PointOrigen(name: placeName, position: posLatLng);
     add(SetOrigenEvent(origen));
   }
-
 
 
   static Future<dynamic> receiveRequest(String url) async {

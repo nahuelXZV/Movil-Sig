@@ -23,7 +23,7 @@ class BoxInformation extends StatelessWidget {
             height: 80,
             width: size.width * 0.5,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color.fromRGBO(255, 255, 255, 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
