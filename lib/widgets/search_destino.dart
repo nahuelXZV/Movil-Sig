@@ -17,10 +17,11 @@ class SearchBar extends StatelessWidget {
     final searchBloc = BlocProvider.of<SearchBloc>(context);                  
 
     final origen = searchBloc.state.origen!.position!;
+    final origenString = searchBloc.state.origen!.name!;
     final destino = LatLng(edificio.latitud!, edificio.longitud!);
 
-    final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, edificio.descripcion!);
-    final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, edificio.descripcion!);
+    final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, edificio.descripcion!, edificio.localidad!, origenString);
+    final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, edificio.descripcion!, edificio.localidad!, origenString);
     
     searchBloc.add(SetDestinoEvent(edificio, true)); //! OJO: carga el edificio buscado
     searchBloc.add(SetRoutesEvent(pointsDriving, pointsWalking)); //aqui carga ya las rutas

@@ -86,7 +86,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
   
 
-  Future<RouteDestination> getCoorsStartToEndGoogleDriving(LatLng start, LatLng end, String endPlace ) async{
+  Future<RouteDestination> getCoorsStartToEndGoogleDriving(LatLng start, LatLng end, String endPlace, String endLocalidad, String startPlace ) async{
     String urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&language=es&key=${apiKeyGoogleMap}';
     var responseDirectionApi = await receiveRequest(urlOriginToDestinationDirectionDetails);
     final pointsCode = responseDirectionApi['routes'][0]['overview_polyline']['points'];
@@ -108,11 +108,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       duration: durationString, 
       distance: distanceString,
       endPlace: endPlace,
+      endLocalidad: endLocalidad,
+      startPlace: startPlace
     );
   }
 
 
-  Future<RouteDestination> getCoorsStartToEndGoogleWalking(LatLng start, LatLng end, String endPlace ) async{
+  Future<RouteDestination> getCoorsStartToEndGoogleWalking(LatLng start, LatLng end, String endPlace, String endLocalidad, String startPlace ) async{
 
     String urlOriginToDestinationDirectionDetails = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&language=es&mode=walking&key=${apiKeyGoogleMap}';
     var responseDirectionApi = await receiveRequest(urlOriginToDestinationDirectionDetails);
@@ -137,6 +139,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       duration: durationString1, 
       distance: distanceString,
       endPlace: endPlace,
+      endLocalidad: endLocalidad,
+      startPlace: startPlace
     );
   }
 

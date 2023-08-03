@@ -46,7 +46,13 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: BlocBuilder<LocationBloc, LocationState>(
         builder: (context, locationState) {
-          if( locationState.lastKnowLocation == null ) return const Center(child: Text('espere por favor'));
+          if( locationState.lastKnowLocation == null ) 
+          return Center(
+            child: Image.asset(
+                'assets/logo.gif',
+                height: 120,
+              ),
+            );
           
           return BlocBuilder<MapBloc, MapState>(
             builder: (context, mapState) {

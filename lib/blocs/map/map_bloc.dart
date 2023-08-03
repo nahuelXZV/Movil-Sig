@@ -112,6 +112,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       markerId: MarkerId('START'),
       position: destination.points.first,
       icon: iconOrigen,
+      infoWindow: InfoWindow(
+        title: destination.startPlace
+      ), 
     ); 
 
     Marker marcadorEnd = Marker( //*marker: ubicacion del edificio END
@@ -120,12 +123,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       icon: iconDestino,
       infoWindow: InfoWindow(
         title: destination.endPlace,
+        snippet: destination.endLocalidad,
       ), 
       
     );  
 
    
-
     final curretPolylines = Map<String, Polyline>.from( state.polylines );
     curretPolylines['route'] = myRoute;
 
@@ -146,48 +149,48 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
 
 
-  Future<RouteDestination> getCoorsStartToEndMAPBOXDriving( LatLng start, LatLng end , String endPlace) async {
+  // Future<RouteDestination> getCoorsStartToEndMAPBOXDriving( LatLng start, LatLng end , String endPlace) async {
 
-    final trafficResponse = await trafficService.getCoorsStartToEndDriving(start, end);
-    final geometry = trafficResponse.routes[0].geometry;
-    final distance = trafficResponse.routes[0].distance;
-    final duration = trafficResponse.routes[0].duration;
+  //   final trafficResponse = await trafficService.getCoorsStartToEndDriving(start, end);
+  //   final geometry = trafficResponse.routes[0].geometry;
+  //   final distance = trafficResponse.routes[0].distance;
+  //   final duration = trafficResponse.routes[0].duration;
 
-    // Decodificar
-    final points = decodePolyline( geometry, accuracyExponent: 6 );
-    final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
+  //   // Decodificar
+  //   final points = decodePolyline( geometry, accuracyExponent: 6 );
+  //   final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
 
-    final durationString = convertTime(duration);
-    final distanceString = convertDistance(distance);
-    return RouteDestination(
-      points: latLngList, 
-      duration: durationString, 
-      distance: distanceString,
-      endPlace: endPlace,
-    );
-  }
+  //   final durationString = convertTime(duration);
+  //   final distanceString = convertDistance(distance);
+  //   return RouteDestination(
+  //     points: latLngList, 
+  //     duration: durationString, 
+  //     distance: distanceString,
+  //     endPlace: endPlace,
+  //   );
+  // }
 
 
-  Future<RouteDestination> getCoorsStartToEndMAPBOXWalking( LatLng start, LatLng end, String endPlace ) async {
+  // Future<RouteDestination> getCoorsStartToEndMAPBOXWalking( LatLng start, LatLng end, String endPlace ) async {
 
-    final trafficResponse = await trafficService.getCoorsStartToEndWalking(start, end);
-    final geometry = trafficResponse.routes[0].geometry;
-    final distance = trafficResponse.routes[0].distance;
-    final duration = trafficResponse.routes[0].duration;
+  //   final trafficResponse = await trafficService.getCoorsStartToEndWalking(start, end);
+  //   final geometry = trafficResponse.routes[0].geometry;
+  //   final distance = trafficResponse.routes[0].distance;
+  //   final duration = trafficResponse.routes[0].duration;
 
-    // Decodificar
-    final points = decodePolyline( geometry, accuracyExponent: 6 );
-    final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
+  //   // Decodificar
+  //   final points = decodePolyline( geometry, accuracyExponent: 6 );
+  //   final latLngList = points.map( ( coor ) => LatLng(coor[0].toDouble(), coor[1].toDouble()) ).toList();
 
-    final durationString = convertTime(duration);
-    final distanceString = convertDistance(distance);
-    return RouteDestination(
-      points: latLngList, 
-      duration: durationString, 
-      distance: distanceString,
-      endPlace: endPlace,
-    );
-  }
+  //   final durationString = convertTime(duration);
+  //   final distanceString = convertDistance(distance);
+  //   return RouteDestination(
+  //     points: latLngList, 
+  //     duration: durationString, 
+  //     distance: distanceString,
+  //     endPlace: endPlace,
+  //   );
+  // }
 
 
   Future cleanMap() async {

@@ -25,8 +25,8 @@ class SearchOrigen extends StatelessWidget {
       if(searchBloc.state.isDestinoSearched){
         showLoadingMessage(context);
         final destino = LatLng(searchBloc.state.destino!.latitud!, searchBloc.state.destino!.longitud!);
-        final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!);
-        final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!);
+        final pointsDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!, searchBloc.state.destino!.localidad!, result.name!);
+        final pointsWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!, searchBloc.state.destino!.localidad!, result.name!);
         searchBloc.add(SetRoutesEvent(pointsDriving, pointsWalking)); //aqui carga ya las rutas
         mapBloc.state.isDriving
         ? await mapBloc.drawRoutePolyline(pointsDriving)

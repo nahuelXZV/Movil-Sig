@@ -106,8 +106,8 @@ class _ManualMarkerBody extends StatelessWidget {
                             if(searchBloc.state.isDestinoSearched){
                               final destino = LatLng(searchBloc.state.destino!.latitud!, searchBloc.state.destino!.longitud!);
                               showLoadingMessage(context);
-                              final routeDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!);
-                              final routeWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!);
+                              final routeDriving = await searchBloc.getCoorsStartToEndGoogleDriving(origen, destino, searchBloc.state.destino!.descripcion!, searchBloc.state.destino!.localidad!, origenString);
+                              final routeWalking = await searchBloc.getCoorsStartToEndGoogleWalking(origen, destino, searchBloc.state.destino!.descripcion!, searchBloc.state.destino!.localidad!, origenString);
                               mapBloc.state.isDriving
                               ? await mapBloc.drawRoutePolyline(routeDriving)
                               : await mapBloc.drawRoutePolyline(routeWalking);
