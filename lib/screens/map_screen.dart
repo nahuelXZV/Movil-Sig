@@ -50,7 +50,7 @@ class _MapScreenState extends State<MapScreen> {
           return Center(
             child: Image.asset(
                 'assets/logo.gif',
-                height: 120,
+                height: 150,
               ),
             );
           

@@ -42,7 +42,7 @@ class _AccessButton extends StatelessWidget {
         ),
         SizedBox(height: 10,),
         Text(
-          'Debe habilitar el GPS',
+          'Se necesita acceso al GPS',
           style: TextStyle(
             color: Color.fromARGB(255, 120, 22, 150),
             fontSize: 20,
