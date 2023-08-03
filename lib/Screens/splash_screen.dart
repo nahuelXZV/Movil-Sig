@@ -4,7 +4,6 @@ import 'package:sig_app/blocs/blocs.dart';
 import 'package:sig_app/screens/loading_screen.dart';
 import 'dart:async';
 
-import 'package:sig_app/screens/microfono_prueba.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final searchBloc = BlocProvider.of<SearchBloc>(context);
     searchBloc.cargarEdificios();
 
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         // MaterialPageRoute(builder: (context) => Microfono()),

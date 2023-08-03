@@ -29,7 +29,6 @@ class SearchOriginDelegate extends SearchDelegate<SearchResult> {
         onPressed: () async {
           query = '';
           await startListening(context);
-
         },
       ),
     ];
@@ -165,8 +164,8 @@ class SearchOriginDelegate extends SearchDelegate<SearchResult> {
       await speech.initialize();
       await speech.listen(
         onResult: _onSpeechResult,
-        listenFor: Duration(seconds: 12),
-        pauseFor: Duration(seconds: 4),
+        listenFor: Duration(seconds: 15),
+        pauseFor: Duration(seconds: 5),
       );
       showResults(context);
     }else{

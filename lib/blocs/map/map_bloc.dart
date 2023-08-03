@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:sig_app/blocs/blocs.dart';
+import 'package:sig_app/helpers/custom_image_marker.dart';
 
 import 'package:sig_app/models/models.dart';
 import 'package:sig_app/services/services.dart';
@@ -102,18 +103,34 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     }
 
+
+    final iconOrigen = await getAssetImageMarkerOrigen();
+    final iconDestino = await getAssetImageMarkerDestino();
+
+
+    Marker marcadorStart = Marker( //*marker: ubicacion del punto de origen END
+      markerId: MarkerId('START'),
+      position: destination.points.first,
+      icon: iconOrigen,
+    ); 
+
     Marker marcadorEnd = Marker( //*marker: ubicacion del edificio END
       markerId: MarkerId('END'),
       position: destination.points.last,
+      icon: iconDestino,
       infoWindow: InfoWindow(
         title: destination.endPlace,
       ), 
+      
     );  
+
+   
 
     final curretPolylines = Map<String, Polyline>.from( state.polylines );
     curretPolylines['route'] = myRoute;
 
     final currentMarkers = Map<String, Marker>.from( state.markers ); 
+    currentMarkers['START'] = marcadorStart;
     currentMarkers['END'] = marcadorEnd;
 
 

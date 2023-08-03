@@ -92,6 +92,7 @@ class BoxInformation extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(
                             Icons.clear_rounded,
+                            color: Colors.red,
                           ),
                           onPressed: (){
                             mapBloc.cleanMap();

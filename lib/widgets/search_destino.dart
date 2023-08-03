@@ -42,7 +42,7 @@ class SearchBar extends StatelessWidget {
         children: [
           Icon(
             Icons.location_on,
-            color: Colors.orange.shade700,
+            color: Colors.orange.shade800,
             size: 30,
           ),
           GestureDetector(
@@ -73,7 +73,8 @@ class SearchBar extends StatelessWidget {
                   return (searchState.isDestinoSearched)
                   ? Text(
                     '${searchState.destino!.descripcion}',
-                    style: TextStyle(color: Colors.grey.shade600),
+                    maxLines: 2,
+                    style: TextStyle(color: Colors.grey.shade900),
                   )
                   : Text(
                     '¿A qué lugar de la UAGRM quieres ir?',

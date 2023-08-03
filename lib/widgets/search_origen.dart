@@ -80,7 +80,8 @@ class SearchOrigen extends StatelessWidget {
                   ? CircularProgressIndicator()
                   :Text(
                     '${searchState.origen!.name}',
-                    style: TextStyle(color: Colors.grey.shade600),
+                    maxLines: 2,
+                    style: TextStyle(color: Colors.grey.shade900),
                   ),
                 ),
               ),

@@ -14,13 +14,16 @@ void showLoadingMessage( BuildContext context ) {
         title: const Text('Espere por favor'),
         content: Container(
           width: 100,
-          height: 100,
+          height: 120,
           margin: const EdgeInsets.only( top: 10),
           child: Column(
-            children: const [
+            children:  [
+              Image.asset(
+                'assets/logo.gif',
+                height: 70,
+              ),
               Text('Calculando ruta'),
               SizedBox( height: 15 ),
-              CircularProgressIndicator( strokeWidth: 3, color: Colors.black )
             ],
           ),
         ),
