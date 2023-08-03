@@ -18,7 +18,7 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapBLoc = BlocProvider.of<MapBloc>(context);
+    final mapBloc = BlocProvider.of<MapBloc>(context);
     final CameraPosition initialCameraPosition = CameraPosition(
       target: initialLocation,
       zoom: 15.7
@@ -36,7 +36,8 @@ class MapView extends StatelessWidget {
             myLocationButtonEnabled: false,
             markers: markers,
             polylines: polylines,
-            onMapCreated: (controller) => mapBLoc.add(OnMapInitializedEvent(controller)),
+            onMapCreated: (controller) => mapBloc.add(OnMapInitializedEvent(controller)),
+            onCameraMove: (position) => mapBloc.mapCenter = position.target,
             //TODO: Polilines
             //TODO: cuando se mueve el mapa
           ),

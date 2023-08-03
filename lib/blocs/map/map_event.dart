@@ -18,22 +18,6 @@ class InitMarkersEvent extends MapEvent {
   const InitMarkersEvent(this.markers);
 }
 
-class SetMarkerEvent extends MapEvent {
-  final Edificio edificio;
-  const SetMarkerEvent(this.edificio);
-}
-
-class DeleteSearchedMarkerEvent extends MapEvent {
-  // final Edificio edificio;
-  // const DeleteMarkerEvent(this.edificio);
-}
-
-
-class SetEdificioSearchedEvent extends MapEvent {
-  final Edificio edificio;
-  final LatLng userLocation;
-  const SetEdificioSearchedEvent(this.edificio, this.userLocation);
-}
 
 class DisplayPolylinesEvent extends MapEvent {
   final Map<String, Polyline> polylines;
@@ -46,7 +30,3 @@ class ChangeIsDrivingEvent extends MapEvent {
   const ChangeIsDrivingEvent(this.isDriving);
 }
 
-class ChangeIsEdificioSearchedEvent extends MapEvent {
-  final bool isEdificioSearched;
-  const ChangeIsEdificioSearchedEvent(this.isEdificioSearched);
-}

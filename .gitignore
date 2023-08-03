@@ -42,3 +42,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+#MY IGNORES
+api_end_points.dart
+lib/services/api_end_points.dart

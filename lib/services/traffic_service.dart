@@ -63,9 +63,13 @@ class TrafficService {
     final resp = await _dioPlaces.get(url, queryParameters: {
       'proximity': '${ proximity.longitude },${ proximity.latitude }',
       'limit': 7,
+
+      'country': 'bo'
     });
 
-    final placesResponse = PlacesResponse.fromJson( resp.data );
+    final placesResponse = PlacesResponse.fromMap( resp.data );
+
+    // print(placesResponse.features[0].geometry.coordinates);
 
     return placesResponse.features;
   }
@@ -93,7 +97,6 @@ class TrafficService {
 
     final placeName = resp.data['features'][0]['place_name_es'];
     return placeName;
-
   }
 
 

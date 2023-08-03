@@ -10,7 +10,7 @@ class BtnWalk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // final locationBloc = BlocProvider.of<LocationBloc>(context);
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
     return BlocBuilder<MapBloc, MapState>(
@@ -30,9 +30,9 @@ class BtnWalk extends StatelessWidget {
             size: 32,
           ),
           onPressed: () {
-            if(mapState.isEdificioSearched){
+            if(searchBloc.state.isDestinoSearched){
               mapBloc.add(ChangeIsDrivingEvent(false));
-              mapBloc.drawRoutePolyline(mapBloc.state.routeWalking!);
+              mapBloc.drawRoutePolyline(searchBloc.state.routeWalking!);
             }else{
               mapBloc.add(ChangeIsDrivingEvent(false));
             }

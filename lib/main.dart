@@ -11,6 +11,7 @@ void main() {
         BlocProvider(create: (context) => GpsBloc(),),
         BlocProvider(create: (context) => LocationBloc(),),
         BlocProvider(create: (context) => MapBloc(trafficService: TrafficService(), locationBloc: BlocProvider.of<LocationBloc>(context) ),),
+        BlocProvider(create: ((context) => SearchBloc(trafficService: TrafficService()))),
       ],
       child: const SigApp(),
     ),
